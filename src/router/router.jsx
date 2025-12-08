@@ -27,7 +27,11 @@ const router = createBrowserRouter([
     Component: AuthLayout,
     children: [
       { path: "login", Component: Login },
-      { path: "register", Component: Register },
+      {
+        path: "register",
+        Component: Register,
+        loader: () => fetch("/locations.json").then((res) => res.json()),
+      },
     ],
   },
   {

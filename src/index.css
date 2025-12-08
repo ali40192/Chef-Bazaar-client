@@ -2,3 +2,9 @@
 @plugin "daisyui" {
   themes: light --default, dark --prefersdark, cupcake, synthwave;
 }
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  --color-primary: blue;
+  --color-secondary: teal;
+}

@@ -2,19 +2,36 @@ import { useForm } from "react-hook-form";
 import useAuth from "../hooks/useAuth";
 
 import { uploadeImg } from "../utils";
-import { Link } from "react-router";
+import { data, Link, useLoaderData } from "react-router";
 
 const Register = () => {
+  const addresses = useLoaderData();
+
   const { creatUser, UpdateUserprofile } = useAuth();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit, watch } = useForm();
+
+  const Allregions = addresses?.map((address) => address.region);
+  const regions = [...new Set(Allregions)];
+  const districsByRegion = (region) => {
+    const districs = addresses.filter((address) => address.region === region);
+    const singledistrics = districs.map((address) => address.district);
+    return singledistrics;
+  };
+
+  const dynamicDistrict = watch("region");
 
   const onformSubmit = async (data) => {
-    const { username, email, password, confirmpassword, image } = data;
+    const {
+      username,
+      email,
+      password,
+      confirmpassword,
+      image,
+      region,
+      district,
+    } = data;
+
     creatUser(email, password)
       .then((result) => {
         console.log(result);
@@ -27,6 +44,7 @@ const Register = () => {
     const imageUrl = await uploadeImg(imageFile);
     UpdateUserprofile(username, imageUrl);
   };
+
   return (
     <div>
       <div class="">
@@ -87,6 +105,9 @@ const Register = () => {
                         name="password"
                       />
                     </div>
+
+                    {/* confirmpassword */}
+
                     <div class="flex items-center justify-between">
                       <label class="text-base font-medium text-gray-900">
                         Confirm Password
@@ -94,12 +115,14 @@ const Register = () => {
                     </div>
                     <div class="mt-2">
                       <input
-                        {...register("confirmpassword")}
+                        {...register("conpassword")}
                         placeholder="Confirm Password"
                         type="password"
                         class="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       />
                     </div>
+
+                    {/* profile */}
                     <div class="flex items-center justify-between mt-3">
                       <label class="text-base font-medium text-gray-900">
                         Profile Picture
@@ -113,7 +136,44 @@ const Register = () => {
                       />
                     </div>
                   </div>
+                  {/* regions */}
+                  <div class="flex items-center justify-between  mt-3">
+                    <label class="text-base font-medium text-gray-900">
+                      Address
+                    </label>
+                  </div>
+                  <div class="mt-2 mb-8">
+                    <select
+                      {...register("region")}
+                      defaultValue="Pick Your Region"
+                      className="select"
+                    >
+                      <option disabled={true}>Pick Your Region</option>
+                      {regions.map((region, index) => (
+                        <option key={index} value={region}>
+                          {region}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
+                  <div class="mt-2 mb-8">
+                    <select
+                      {...register("district")}
+                      defaultValue="Pick Your District"
+                      className="select"
+                    >
+                      <option disabled={true}>Pick Your District</option>
+                      {districsByRegion(dynamicDistrict).map(
+                        (district, index) => (
+                          <option key={index} value={district}>
+                            {district}
+                          </option>
+                        )
+                      )}
+                    </select>
+                  </div>
+                  {/* button */}
                   <div>
                     <button
                       class="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/80"
