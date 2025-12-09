@@ -24,7 +24,7 @@ const slides = [
     id: 3,
     title: "Fast & Safe Delivery",
     subtitle: "Get your food delivered hot and fresh.",
-    img: "https://images.unsplash.com/photo-1601924579627-3ec62a4a4c8e",
+    img: "https://i.ibb.co/Tx4tCjtZ/chad-montano-Mq-T0asuo-Ic-U-unsplash.jpg",
   },
 ];
 

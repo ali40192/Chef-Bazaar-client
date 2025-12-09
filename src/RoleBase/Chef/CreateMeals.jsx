@@ -2,11 +2,20 @@ import React from "react";
 import useAuth from "../../hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { uploadeImg } from "../../utils";
+import axios from "axios";
+import { useMutation } from "@tanstack/react-query";
 
 const CreateMeals = () => {
   const { register, handleSubmit } = useForm();
 
   const { user } = useAuth();
+  const { mutateAsync } = useMutation({
+    mutationFn: async (mealdata) =>
+      await axios.post("http://localhost:3000/meals", mealdata),
+    onSuccess: (data) => {
+      console.log(data);
+    },
+  });
 
   const onSubmit = async (data) => {
     const {
@@ -24,18 +33,21 @@ const CreateMeals = () => {
 
     const imageFile = image[0];
     const imageUrl = await uploadeImg(imageFile);
-    console.log(
-      foodName,
-      chefName,
-      imageUrl,
-      price,
-      rating,
-      ingredients,
-      estimatedTime,
-      chefExperience,
-      chefId,
-      email
-    );
+
+    const meal = {
+      foodName: foodName,
+      chefName: chefName,
+      foodImage: imageUrl,
+      price: price,
+      rating: rating,
+      ingredients: ingredients,
+      estimatedDeliveryTime: estimatedTime,
+      chefExperience: chefExperience,
+      chefId: "chef_123456",
+      userEmail: email,
+      createdAt: new Date().toISOString(),
+    };
+    mutateAsync(meal);
   };
 
   return (
