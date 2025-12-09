@@ -7,6 +7,7 @@ import Register from "../Pages/Register";
 import Home from "../Pages/Home";
 import Loader from "../Components/Common/Loader";
 import Error from "../Components/Common/Error";
+import CreateMeals from "../RoleBase/Chef/CreateMeals";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
   {
     path: "dashboard",
     Component: DashboardLayout,
+    children: [{ path: "createmeals", Component: CreateMeals }],
   },
 ]);
 export default router;

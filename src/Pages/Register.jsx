@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import useAuth from "../hooks/useAuth";
 
 import { uploadeImg } from "../utils";
-import { data, Link, useLoaderData } from "react-router";
+import { Link, useLoaderData } from "react-router";
 
 const Register = () => {
   const addresses = useLoaderData();
