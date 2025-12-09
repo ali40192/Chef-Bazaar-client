@@ -4,10 +4,11 @@ import AuthLayout from "../Layouts/AuthLayout";
 import DashboardLayout from "../Layouts/DashboardLayout";
 import Login from "../Pages/Login";
 import Register from "../Pages/Register";
-import Home from "../Pages/Home";
+
 import Loader from "../Components/Common/Loader";
 import Error from "../Components/Common/Error";
 import CreateMeals from "../RoleBase/Chef/CreateMeals";
+import Home from "../Pages/Home/Home";
 
 const router = createBrowserRouter([
   {

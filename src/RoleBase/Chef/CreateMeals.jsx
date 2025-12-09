@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { uploadeImg } from "../../utils";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const CreateMeals = () => {
   const { register, handleSubmit } = useForm();
@@ -13,7 +14,7 @@ const CreateMeals = () => {
     mutationFn: async (mealdata) =>
       await axios.post("http://localhost:3000/meals", mealdata),
     onSuccess: (data) => {
-      console.log(data);
+      toast.success("seccusfully added", data);
     },
   });
 
