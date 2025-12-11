@@ -32,7 +32,7 @@ const Home = () => {
         <h1 className="text-2xl font-bold text-center ">Our Special Meals</h1>
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam</p>
       </div>
-      <div className=" grid grid-cols-3 gap-4 mt-10   mb-40">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full mt-10 mb-40 justify-items-center">
         {meals.map((meal) => (
           <MealCards key={meal._id} meal={meal}></MealCards>
         ))}

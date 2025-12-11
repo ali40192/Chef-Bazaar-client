@@ -1,9 +1,10 @@
 import React from "react";
+import { Link } from "react-router";
 
 const MealCards = ({ meal }) => {
-  const { chefName, chefId, foodImage, price, rating } = meal;
+  const { chefName, chefId, foodImage, price, rating, _id } = meal;
   return (
-    <div className="border border-yellow-500 rounded-xl shadow-xl p-4 w-80 bg-white hover:shadow-2xl transition relative hover:scale-105">
+    <div className="border border-yellow-500 rounded-xl shadow-xl p-4 max-w-80 w-full bg-white hover:shadow-2xl transition relative hover:scale-105">
       {/* Food Image */}
       <div className="relative flex justify-center items-center">
         <img
@@ -42,9 +43,12 @@ const MealCards = ({ meal }) => {
       </p>
 
       {/* DaisyUI Details Button */}
-      <button className="btn btn-error w-full mt-4 text-white">
+      <Link
+        to={`/meals/${_id}`}
+        className="btn btn-error w-full mt-4 text-white"
+      >
         See Details
-      </button>
+      </Link>
     </div>
   );
 };

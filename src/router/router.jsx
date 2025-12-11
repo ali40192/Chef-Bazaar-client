@@ -9,6 +9,10 @@ import Loader from "../Components/Common/Loader";
 import Error from "../Components/Common/Error";
 import CreateMeals from "../RoleBase/Chef/CreateMeals";
 import Home from "../Pages/Home/Home";
+import Allmeals from "../Pages/Allmeals/Allmeals";
+import PrivateRoute from "../Components/Common/PrivateRoute";
+import Details from "../Pages/Allmeals/Details";
+import Order from "../Pages/Allmeals/Order";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +25,18 @@ const router = createBrowserRouter([
       {
         index: true,
         Component: Home,
+      },
+      {
+        path: "allmeals",
+        Component: Allmeals,
+      },
+      {
+        path: "/meals/:id",
+        element: (
+          <PrivateRoute>
+            <Details></Details>
+          </PrivateRoute>
+        ),
       },
     ],
   },
@@ -39,7 +55,19 @@ const router = createBrowserRouter([
   {
     path: "dashboard",
     Component: DashboardLayout,
-    children: [{ path: "createmeals", Component: CreateMeals }],
+    children: [
+      { path: "createmeals", Component: CreateMeals },
+      {
+        path: "order/:id",
+
+        element: (
+          <PrivateRoute>
+            <Order></Order>
+          </PrivateRoute>
+        ),
+        loader: () => fetch("/locations.json").then((res) => res.json()),
+      },
+    ],
   },
 ]);
 export default router;
