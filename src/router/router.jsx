@@ -13,6 +13,7 @@ import Allmeals from "../Pages/Allmeals/Allmeals";
 import PrivateRoute from "../Components/Common/PrivateRoute";
 import Details from "../Pages/Allmeals/Details";
 import Order from "../Pages/Allmeals/Order";
+import success from "../Components/Payment/success";
 
 const router = createBrowserRouter([
   {
@@ -67,6 +68,7 @@ const router = createBrowserRouter([
         ),
         loader: () => fetch("/locations.json").then((res) => res.json()),
       },
+      { path: "success", Component: success },
     ],
   },
 ]);

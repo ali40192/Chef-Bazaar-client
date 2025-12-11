@@ -3,11 +3,24 @@ import { useLoaderData, useParams } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import { useForm, useWatch } from "react-hook-form";
 import Loader from "../../Components/Common/Loader";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 const Order = () => {
+  const { mutateAsync } = useMutation({
+    mutationFn: async (orderdata) =>
+      await axios.post(
+        "http://localhost:3000/create-checkout-session",
+        orderdata
+      ),
+    onSuccess: (data) => {
+      toast.success("seccusfully added", data);
+      window.location.href = data.data.url;
+    },
+  });
+
   const { id } = useParams();
   const [calculatedPrice, setCalculatedPrice] = useState(0);
 
@@ -23,17 +36,7 @@ const Order = () => {
 
   const { user } = useAuth();
 
-  const { register, handleSubmit, control } = useForm();
-
-  // {
-  //   defaultValues: {
-  //     mealName: orderFood.foodName,
-  //     price: orderFood.price,
-  //     quantity: 1,
-  //     chefId: orderFood.chefId,
-  //     userEmail: user?.email,
-  //   },
-  // }
+  const { register, handleSubmit, control, watch } = useForm();
 
   const quantity = useWatch({
     control,
@@ -63,25 +66,7 @@ const Order = () => {
   });
 
   const onformSubmit = async (data) => {
-    const paymentStatus = "Pending";
-    const orderStatus = "Pending";
-    const UserAddress = { region: data.region, district: data.district };
-
-    const { mealName, price, quantity, chefId, userEmail } = data;
-    const orderData = {
-      foodId: id,
-      mealName,
-      price,
-      quantity,
-      chefId,
-      paymentStatus,
-      userEmail,
-      UserAddress,
-
-      orderStatus,
-      orderTime: new Date().toLocaleString(),
-    };
-    console.log(orderData);
+    console.log(data);
   };
 
   const confirmOrder = () => {
@@ -95,11 +80,38 @@ const Order = () => {
       confirmButtonText: "Confirm!",
     }).then((result) => {
       if (result.isConfirmed) {
+        const foodId = id;
+        const mealName = watch("mealName");
+        const price = watch("price");
+        const quantity = watch("quantity");
+        const chefId = watch("chefId");
+        const userEmail = watch("userEmail");
+        const paymentStatus = "Pending";
+        const orderStatus = "Pending";
+        const region = watch("region");
+        const district = watch("district");
+        const UserAddress = { region, district };
+        const orderTime = new Date().toLocaleString();
+
+        const order = {
+          foodId,
+          mealName: mealName,
+          price: Number(price),
+          quantity: Number(quantity),
+          chefId,
+          paymentStatus,
+          userEmail,
+          UserAddress,
+          orderStatus,
+
+          orderTime,
+        };
         Swal.fire({
           title: "Confirmed!",
           text: "Order Placed Successfully.",
           icon: "success",
         });
+        mutateAsync(order);
       }
     });
   };
@@ -223,10 +235,6 @@ const Order = () => {
 
         {/* Buttons */}
         <div className="flex justify-end gap-4 mt-6">
-          {/* <button type="button" className="btn btn-outline">
-            Cancel
-          </button> */}
-
           <button
             onClick={confirmOrder}
             type="submit"
