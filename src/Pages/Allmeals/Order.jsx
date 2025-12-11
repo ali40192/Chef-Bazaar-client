@@ -5,6 +5,7 @@ import { useForm, useWatch } from "react-hook-form";
 import Loader from "../../Components/Common/Loader";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const Order = () => {
   const { id } = useParams();
@@ -17,21 +18,22 @@ const Order = () => {
       return res.data;
     },
   });
-  console.log(orderFood);
 
   const addresses = useLoaderData();
 
   const { user } = useAuth();
 
-  const { register, handleSubmit, control } = useForm({
-    defaultValues: {
-      mealName: orderFood.foodName,
-      price: orderFood.price,
-      quantity: 1,
-      chefId: orderFood.chefId,
-      userEmail: user?.email,
-    },
-  });
+  const { register, handleSubmit, control } = useForm();
+
+  // {
+  //   defaultValues: {
+  //     mealName: orderFood.foodName,
+  //     price: orderFood.price,
+  //     quantity: 1,
+  //     chefId: orderFood.chefId,
+  //     userEmail: user?.email,
+  //   },
+  // }
 
   const quantity = useWatch({
     control,
@@ -67,6 +69,7 @@ const Order = () => {
 
     const { mealName, price, quantity, chefId, userEmail } = data;
     const orderData = {
+      foodId: id,
       mealName,
       price,
       quantity,
@@ -79,6 +82,26 @@ const Order = () => {
       orderTime: new Date().toLocaleString(),
     };
     console.log(orderData);
+  };
+
+  const confirmOrder = () => {
+    Swal.fire({
+      title: `Your Total Price is ${calculatedPrice}`,
+      text: "Are you sure you want to confirm this order?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Confirm!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Confirmed!",
+          text: "Order Placed Successfully.",
+          icon: "success",
+        });
+      }
+    });
   };
 
   if (isLoading) {
@@ -200,11 +223,15 @@ const Order = () => {
 
         {/* Buttons */}
         <div className="flex justify-end gap-4 mt-6">
-          <button type="button" className="btn btn-outline">
+          {/* <button type="button" className="btn btn-outline">
             Cancel
-          </button>
+          </button> */}
 
-          <button type="submit" className="btn btn-error text-white">
+          <button
+            onClick={confirmOrder}
+            type="submit"
+            className="btn btn-error text-white"
+          >
             Confirm Order
           </button>
         </div>
