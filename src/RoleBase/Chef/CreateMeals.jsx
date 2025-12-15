@@ -5,9 +5,11 @@ import { uploadeImg } from "../../utils";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 const CreateMeals = () => {
   const { register, handleSubmit } = useForm();
+  const navigate = useNavigate();
 
   const { user } = useAuth();
   const { mutateAsync } = useMutation({
@@ -49,6 +51,8 @@ const CreateMeals = () => {
       createdAt: new Date().toISOString(),
     };
     mutateAsync(meal);
+    navigate("/allmeals");
+    window.location.reload();
   };
 
   return (

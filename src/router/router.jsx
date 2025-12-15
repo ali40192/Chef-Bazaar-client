@@ -14,14 +14,16 @@ import PrivateRoute from "../Components/Common/PrivateRoute";
 import Details from "../Pages/Allmeals/Details";
 import Order from "../Pages/Allmeals/Order";
 import success from "../Components/Payment/success";
+import MyOrders from "../RoleBase/User/MyOrders";
 
 const router = createBrowserRouter([
   {
     path: "/",
 
     Component: MainLayout,
-    hydrateFallbackElement: <Loader />,
+
     errorElement: <Error />,
+    hydrateFallbackElement: <Loader></Loader>,
     children: [
       {
         index: true,
@@ -55,7 +57,11 @@ const router = createBrowserRouter([
   },
   {
     path: "dashboard",
-    Component: DashboardLayout,
+    element: (
+      <PrivateRoute>
+        <DashboardLayout></DashboardLayout>
+      </PrivateRoute>
+    ),
     children: [
       { path: "createmeals", Component: CreateMeals },
       {
@@ -68,6 +74,7 @@ const router = createBrowserRouter([
         ),
         loader: () => fetch("/locations.json").then((res) => res.json()),
       },
+      { path: "my-orders", Component: MyOrders },
       { path: "success", Component: success },
     ],
   },

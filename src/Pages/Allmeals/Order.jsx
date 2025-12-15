@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLoaderData, useParams } from "react-router";
+import { useLoaderData, useNavigate, useParams } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import { useForm, useWatch } from "react-hook-form";
 import Loader from "../../Components/Common/Loader";
@@ -9,15 +9,13 @@ import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 
 const Order = () => {
+  const navigate = useNavigate();
   const { mutateAsync } = useMutation({
     mutationFn: async (orderdata) =>
-      await axios.post(
-        "http://localhost:3000/create-checkout-session",
-        orderdata
-      ),
+      await axios.post("http://localhost:3000/orders", orderdata),
     onSuccess: (data) => {
       toast.success("seccusfully added", data);
-      window.location.href = data.data.url;
+      navigate("/dashboard/my-orders");
     },
   });
 
@@ -99,6 +97,8 @@ const Order = () => {
           price: Number(price),
           quantity: Number(quantity),
           chefId,
+          chefName: orderFood.chefName,
+          deliveryTime: Number(orderFood.estimatedDeliveryTime),
           paymentStatus,
           userEmail,
           UserAddress,

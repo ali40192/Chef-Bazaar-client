@@ -2,15 +2,19 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import MealCards from "../../Components/Common/MealCards";
 import axios from "axios";
+import Loader from "../../Components/Common/Loader";
 
 const Allmeals = () => {
-  const { data: allmeals = [] } = useQuery({
+  const { data: allmeals = [], isLoading } = useQuery({
     queryKey: ["allmeals"],
     queryFn: async () => {
       const res = await axios.get("http://localhost:3000/allmeals");
       return res.data;
     },
   });
+  if (isLoading) {
+    return <Loader></Loader>;
+  }
   return (
     <div className="w-full max-w-5xl mx-auto mt-5">
       <h2 className="text-2xl font-bold mb-4 text-center">All Meals Here</h2>

@@ -2,8 +2,8 @@ import React from "react";
 
 const Loader = () => {
   return (
-    <div>
-      <div class="w-full min-h-screen relative flex items-center justify-center">
+    <div className="h-screen flex items-center justify-center">
+      <div class="w-32 h-32 relative flex items-center justify-center">
         <div class="absolute inset-0 rounded-xl bg-blue-500/20 blur-xl animate-pulse"></div>
 
         <div class="w-full h-full relative flex items-center justify-center">
