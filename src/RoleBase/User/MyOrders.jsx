@@ -4,13 +4,15 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
 import Loader from "../../Components/Common/Loader";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const MyOrders = () => {
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const { mutateAsync } = useMutation({
     mutationFn: async (orderdata) =>
       await axios.post(
-        "http://localhost:3000/create-checkout-session",
+        `${import.meta.env.VITE_API_URL}/create-checkout-session`,
         orderdata
       ),
     onSuccess: (data) => {
@@ -22,9 +24,7 @@ const MyOrders = () => {
   const { data: orders, isLoading } = useQuery({
     queryKey: ["orders", user?.email],
     queryFn: async () => {
-      const res = await axios.get(
-        `http://localhost:3000/orders/${user?.email}`
-      );
+      const res = await axiosSecure(`/orders`);
 
       return res.data;
     },

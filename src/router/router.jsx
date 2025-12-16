@@ -15,6 +15,7 @@ import Details from "../Pages/Allmeals/Details";
 import Order from "../Pages/Allmeals/Order";
 import success from "../Components/Payment/success";
 import MyOrders from "../RoleBase/User/MyOrders";
+import MyProfile from "../Layouts/MyProfile";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,14 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
+      {
+        path: "my-profile",
+        element: (
+          <PrivateRoute>
+            <MyProfile></MyProfile>
+          </PrivateRoute>
+        ),
+      },
       { path: "createmeals", Component: CreateMeals },
       {
         path: "order/:id",

@@ -12,7 +12,7 @@ const Order = () => {
   const navigate = useNavigate();
   const { mutateAsync } = useMutation({
     mutationFn: async (orderdata) =>
-      await axios.post("http://localhost:3000/orders", orderdata),
+      await axios.post(`${import.meta.env.VITE_API_URL}/orders`, orderdata),
     onSuccess: (data) => {
       toast.success("seccusfully added", data);
       navigate("/dashboard/my-orders");

@@ -1,83 +1,84 @@
 import React from "react";
 import { Link, Outlet } from "react-router";
 import useAuth from "../hooks/useAuth";
-import UserSidebar from "../RoleBase/User/UserSidebar";
-import ChefSidebar from "../RoleBase/Chef/ChefSidebar";
 import AdminSidebar from "../RoleBase/Admin/AdminSidebar";
+import ChefSidebar from "../RoleBase/Chef/ChefSidebar";
+import UserSidebar from "../RoleBase/User/UserSidebar";
+import useRole from "../hooks/useRole";
+import Loader from "../Components/Common/Loader";
 
 const DashboardLayout = () => {
   const { user, signOutUser } = useAuth();
-  return (
-    <div className="drawer min-h-screen ">
-      {/* Drawer Toggle */}
-      <input
-        id="dashboard-drawer"
-        type="checkbox"
-        className="drawer-toggle peer"
-      />
+  const [role, isRoleloading] = useRole();
 
-      {/* ================= CONTENT ================= */}
+  if (isRoleloading) {
+    return <Loader></Loader>;
+  }
+
+  return (
+    <div className="drawer lg:drawer-open min-h-screen bg-base-200">
+      <input id="dashboard-drawer" type="checkbox" className="drawer-toggle" />
+
+      {/* ================= MAIN CONTENT ================= */}
       <div className="drawer-content flex flex-col">
         {/* Navbar */}
-        <div className="navbar bg-base-100 shadow px-4">
-          {/* Toggle Button */}
-          <label
-            htmlFor="dashboard-drawer"
-            className="btn btn-square btn-ghost relative"
-          >
-            <span className="absolute text-xl transition-all duration-300 peer-checked:rotate-90 peer-checked:opacity-0">
+        <header className="h-[88px] sticky top-0 z-30 navbar bg-base-100/80 backdrop-blur shadow-sm px-4 border-b">
+          {/* LEFT */}
+          <div className="navbar-start">
+            <label
+              htmlFor="dashboard-drawer"
+              className="btn btn-square btn-ghost lg:hidden"
+            >
               ☰
-            </span>
-            <span className="absolute text-xl transition-all duration-300 rotate-90 opacity-0 peer-checked:rotate-0 peer-checked:opacity-100">
-              ✕
-            </span>
-          </label>
+            </label>
+          </div>
 
-          <Link to="/" className="text-xl font-bold ml-3">
-            Dashboard
-          </Link>
-        </div>
+          {/* CENTER */}
+          <div className="navbar-center">
+            <Link to="/" className="text-xl font-semibold tracking-wide">
+              Dashboard
+            </Link>
+          </div>
+          <div className="navbar-end"></div>
+        </header>
 
         {/* Page Content */}
-        <div className="p-6 bg-base-200 min-h-screen">
-          <Outlet />
-        </div>
+        <main className="flex-1 p-4 sm:p-6 lg:p-8">
+          <div className="max-w-7xl mx-auto bg-base-100 rounded-2xl shadow-sm p-4 sm:p-6 min-h-[calc(100vh-120px)]">
+            <Outlet />
+          </div>
+        </main>
       </div>
 
       {/* ================= SIDEBAR ================= */}
-      <div className="drawer-side">
+      <div className="drawer-side z-40 ">
         <label htmlFor="dashboard-drawer" className="drawer-overlay"></label>
 
-        <aside className="w-72 bg-base-100 shadow-xl flex flex-col">
+        <aside className="w-72 bg-base-100 border-r shadow-lg flex flex-col h-full">
           {/* Sidebar Header */}
-          <div className="p-6 border-b flex items-center gap-4">
-            <div className="avatar placeholder">
-              <div className="bg-primary text-white rounded-full w-12">
-                <img src={user?.photoURL || ""} alt="" />
+          <div className="h-[88px] px-6 border-b flex items-center gap-4">
+            <div className="avatar">
+              <div className="w-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                <img src={user?.photoURL || ""} alt="User" />
               </div>
             </div>
-            <div>
-              <h3 className="font-bold">{user?.displayName || "User Name"}</h3>
-              <p className="text-sm text-gray-500">
-                {user?.email || "user@email.com"}
-              </p>
-            </div>
+            <Link
+              to="/dashboard/my-profile"
+              className="font-semibold text-base hover:text-primary transition"
+            >
+              My Profile
+            </Link>
           </div>
 
-          {/* MENU CONTENT */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-6">
-            {/* USER SECTION */}
-            <UserSidebar></UserSidebar>
+          {/* Menu */}
+          <nav className="flex-1 overflow-y-auto p-4 space-y-6">
+            {role === "admin" && <AdminSidebar />}
+            {role === "chef" && <ChefSidebar />}
+            {role === "user" && <UserSidebar />}
+          </nav>
 
-            {/* CHEF SECTION */}
-            <ChefSidebar></ChefSidebar>
-
-            {/* ADMIN SECTION */}
-            <AdminSidebar></AdminSidebar>
-          </div>
-
-          {/* SIDEBAR FOOTER */}
-          <div className="p-4 border-t">
+          {/* Footer */}
+          <div className="p-4 border-t bg-base-100">
             <button
               onClick={signOutUser}
               className="btn btn-outline btn-error w-full"

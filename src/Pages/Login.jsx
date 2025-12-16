@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import useAuth from "../hooks/useAuth";
 import { Link, useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import { saveOrUpdateUser } from "../utils";
 
 const Login = () => {
   const { loginUser } = useAuth();
@@ -15,16 +16,23 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const handleLogin = (data) => {
+  const handleLogin = async (data) => {
     const { email, password } = data;
-    loginUser(email, password)
+    const result = await loginUser(email, password)
       .then((result) => {
         toast.success("login successfull", result.user);
+        saveOrUpdateUser({
+          name: result.user?.displayName,
+          email: result.user?.email,
+          imageUrl: result.user?.photoURL,
+        });
         navigate(location.state || "/");
+        console.log(result.user);
       })
       .catch((error) => {
         console.log(error);
       });
+    return result;
   };
   return (
     <div className="w-full max-w-2xl mx-auto">

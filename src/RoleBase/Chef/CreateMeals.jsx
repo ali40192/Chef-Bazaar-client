@@ -14,7 +14,7 @@ const CreateMeals = () => {
   const { user } = useAuth();
   const { mutateAsync } = useMutation({
     mutationFn: async (mealdata) =>
-      await axios.post("http://localhost:3000/meals", mealdata),
+      await axios.post(`${import.meta.env.VITE_API_URL}/meals`, mealdata),
     onSuccess: (data) => {
       toast.success("seccusfully added", data);
     },

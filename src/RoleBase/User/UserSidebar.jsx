@@ -9,9 +9,6 @@ const UserSidebar = () => {
       </h4>
       <ul className="menu space-y-1">
         <li>
-          <a className="flex gap-3">👤 My Profile</a>
-        </li>
-        <li>
           <Link to="/dashboard/my-orders" className="flex gap-3">
             🛒 My Orders
           </Link>

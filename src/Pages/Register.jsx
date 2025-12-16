@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import useAuth from "../hooks/useAuth";
 
-import { uploadeImg } from "../utils";
+import { saveOrUpdateUser, uploadeImg } from "../utils";
 import { Link, useLoaderData } from "react-router";
 
 const Register = () => {
@@ -43,6 +43,13 @@ const Register = () => {
     const imageFile = image[0];
     const imageUrl = await uploadeImg(imageFile);
     UpdateUserprofile(username, imageUrl);
+    await saveOrUpdateUser({
+      name: username,
+      email,
+      imageUrl,
+      region,
+      district,
+    });
   };
 
   return (

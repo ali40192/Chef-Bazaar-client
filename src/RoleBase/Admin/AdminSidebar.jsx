@@ -13,6 +13,9 @@ const AdminSidebar = () => {
         <li>
           <a className="flex gap-3">🛠 Manage Requests</a>
         </li>
+        <li>
+          <a className="flex gap-3">🛠 Platform Statistics</a>
+        </li>
       </ul>
     </div>
   );

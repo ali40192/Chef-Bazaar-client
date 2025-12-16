@@ -9,3 +9,9 @@ export const uploadeImg = async (imageFile) => {
   );
   return imgdata.data.data.display_url;
 };
+
+////save or update user info to database
+export const saveOrUpdateUser = async (user) => {
+  const res = await axios.post(`${import.meta.env.VITE_API_URL}/users`, user);
+  return res.data;
+};

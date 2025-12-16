@@ -10,15 +10,16 @@ const success = () => {
 
   useEffect(() => {
     axios
-      .patch(`http://localhost:3000/success-payment?session_id=${session_id}`, {
-        session_id,
-      })
+      .patch(
+        `${
+          import.meta.env.VITE_API_URL
+        }/success-payment?session_id=${session_id}`,
+        {
+          session_id,
+        }
+      )
       .then((res) => {
-        console.log("Payment confirmed", {
-          transectionId: res.data.transectionId,
-          trackingId: res.data.trackingId,
-        });
-        setTrackingId(trackingId);
+        console.log("Payment confirmed", res.data);
       })
       .catch((err) => {
         console.error("Error confirming payment", err);
