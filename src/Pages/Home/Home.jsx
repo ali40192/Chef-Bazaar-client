@@ -3,14 +3,16 @@ import Banner from "../../Components/Common/Banner";
 import Review from "../Reviews/Review";
 import MealCards from "../../Components/Common/MealCards";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+
 import Loader from "../../Components/Common/Loader";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Home = () => {
+  const axiosSecure = useAxiosSecure();
   const { data: meals = [], isLoading } = useQuery({
     queryKey: ["meals"],
     queryFn: async () => {
-      const res = await axios.get("http://localhost:3000/meals");
+      const res = await axiosSecure.get("/meals");
       return res.data;
     },
   });

@@ -4,15 +4,17 @@ import useAuth from "../../hooks/useAuth";
 import { useForm, useWatch } from "react-hook-form";
 import Loader from "../../Components/Common/Loader";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
+
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Order = () => {
+  const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
   const { mutateAsync } = useMutation({
     mutationFn: async (orderdata) =>
-      await axios.post(`${import.meta.env.VITE_API_URL}/orders`, orderdata),
+      await axiosSecure.post(`/orders`, orderdata),
     onSuccess: (data) => {
       toast.success("seccusfully added", data);
       navigate("/dashboard/my-orders");
@@ -25,7 +27,7 @@ const Order = () => {
   const { data: orderFood = {}, isLoading } = useQuery({
     queryKey: ["food", id],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:3000/meals/${id}`);
+      const res = await axiosSecure.get(`/meals/${id}`);
       return res.data;
     },
   });

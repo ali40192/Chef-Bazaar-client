@@ -11,10 +11,7 @@ const MyOrders = () => {
   const axiosSecure = useAxiosSecure();
   const { mutateAsync } = useMutation({
     mutationFn: async (orderdata) =>
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/create-checkout-session`,
-        orderdata
-      ),
+      await axiosSecure.post(`/create-checkout-session`, orderdata),
     onSuccess: (data) => {
       toast.success("seccusfully added", data);
       window.location.href = data.data.url;

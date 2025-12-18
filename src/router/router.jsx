@@ -16,6 +16,10 @@ import Order from "../Pages/Allmeals/Order";
 import success from "../Components/Payment/success";
 import MyOrders from "../RoleBase/User/MyOrders";
 import MyProfile from "../Layouts/MyProfile";
+import ManageRequests from "../RoleBase/Admin/ManageRequests";
+import ManageUsers from "../RoleBase/Admin/ManageUsers";
+import AdminRoute from "./AdminRoute";
+import ChefRoute from "./ChefRoute";
 
 const router = createBrowserRouter([
   {
@@ -72,7 +76,33 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      ///admin
+
+      {
+        path: "manage-requests",
+        element: (
+          <PrivateRoute>
+            <AdminRoute>
+              <ManageRequests></ManageRequests>
+            </AdminRoute>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "manage-users",
+        element: (
+          <PrivateRoute>
+            <AdminRoute>
+              <ManageUsers></ManageUsers>
+            </AdminRoute>
+          </PrivateRoute>
+        ),
+      },
+
+      // chef
       { path: "createmeals", Component: CreateMeals },
+
+      ///user
       {
         path: "order/:id",
 
@@ -83,7 +113,9 @@ const router = createBrowserRouter([
         ),
         loader: () => fetch("/locations.json").then((res) => res.json()),
       },
+
       { path: "my-orders", Component: MyOrders },
+
       { path: "success", Component: success },
     ],
   },

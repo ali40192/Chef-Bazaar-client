@@ -1,4 +1,7 @@
 import React from "react";
+import { Link } from "react-router";
+import { MdManageAccounts } from "react-icons/md";
+import { VscGitPullRequestNewChanges } from "react-icons/vsc";
 
 const AdminSidebar = () => {
   return (
@@ -8,10 +11,14 @@ const AdminSidebar = () => {
       </h4>
       <ul className="menu space-y-1">
         <li>
-          <a className="flex gap-3">👥 Manage Users</a>
+          <Link to="/dashboard/manage-users" className="flex  gap-3">
+            <MdManageAccounts /> Manage Users
+          </Link>
         </li>
         <li>
-          <a className="flex gap-3">🛠 Manage Requests</a>
+          <Link to="/dashboard/manage-requests" className="flex gap-3">
+            <VscGitPullRequestNewChanges /> Manage Requests
+          </Link>
         </li>
         <li>
           <a className="flex gap-3">🛠 Platform Statistics</a>

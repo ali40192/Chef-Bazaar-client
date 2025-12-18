@@ -2,9 +2,12 @@ import { useForm } from "react-hook-form";
 import useAuth from "../hooks/useAuth";
 
 import { saveOrUpdateUser, uploadeImg } from "../utils";
-import { Link, useLoaderData } from "react-router";
+import { Link, useLoaderData, useLocation, useNavigate } from "react-router";
+import { toast } from "react-toastify";
 
 const Register = () => {
+  const loctoion = useLocation();
+  const navigate = useNavigate();
   const addresses = useLoaderData();
 
   const { creatUser, UpdateUserprofile } = useAuth();
@@ -34,7 +37,8 @@ const Register = () => {
 
     creatUser(email, password)
       .then((result) => {
-        console.log(result);
+        toast.success("Successfully Register", result);
+        navigate(location.state || "/");
       })
       .catch((error) => {
         console.log(error);

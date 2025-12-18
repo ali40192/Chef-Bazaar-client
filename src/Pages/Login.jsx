@@ -27,7 +27,6 @@ const Login = () => {
           imageUrl: result.user?.photoURL,
         });
         navigate(location.state || "/");
-        console.log(result.user);
       })
       .catch((error) => {
         console.log(error);

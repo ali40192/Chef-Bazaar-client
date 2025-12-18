@@ -2,23 +2,76 @@ import React from "react";
 import useAuth from "../hooks/useAuth";
 import useRole from "../hooks/useRole";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import Loader from "../Components/Common/Loader";
+import Swal from "sweetalert2";
+import useAxiosSecure from "../hooks/useAxiosSecure";
+import { toast } from "react-toastify";
 
 const MyProfile = () => {
   const { user } = useAuth();
   console.log(user.accessToken);
+  const axiosSecure = useAxiosSecure();
 
   const [role, isRoleloading] = useRole();
   const { data: userDetails } = useQuery({
     queryKey: ["userDetails", user?.email],
     queryFn: async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/user/${user?.email}`
-      );
+      const res = await axiosSecure.get(`/user/${user?.email}`);
       return res.data;
     },
+    enabled: !!user?.email,
   });
+
+  ////////confirm become a seller
+  const handleConfirm = () => {
+    Swal.fire({
+      title: "Are you sure to become a chef?",
+
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, I Want!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axiosSecure
+          .post("/become-chef", { userDetails })
+          .then((res) => {
+            toast.success("Your request send to admin", res);
+          })
+          .catch((err) => {
+            toast.error(err.message);
+          });
+
+        Swal.fire({
+          title: "Confirmed!",
+          text: "Your file Send To Admin.",
+          icon: "success",
+        });
+      }
+    });
+  };
+
+  ////become an Admin
+  const adminConfirm = async () => {
+    Swal.fire({
+      title: "Are you sure to become an Admin?",
+
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, I Want!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "Confirmed!",
+          text: "Your file Send To Admin.",
+          icon: "success",
+        });
+      }
+    });
+  };
 
   const profile = {
     name: user?.displayName || "Jannah",
@@ -94,14 +147,22 @@ const MyProfile = () => {
         {/* Action Buttons */}
         {role === "user" && (
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
-            <button className="btn btn-primary flex-1">Be a Chef</button>
-            <button className="btn btn-outline btn-secondary flex-1">
+            <button onClick={handleConfirm} className="btn btn-primary flex-1">
+              Be a Chef
+            </button>
+            <button
+              onClick={adminConfirm}
+              className="btn btn-outline btn-secondary flex-1"
+            >
               Be an Admin
             </button>
           </div>
         )}
         {role === "chef" && (
-          <button className="btn btn-outline btn-secondary w-full">
+          <button
+            onClick={adminConfirm}
+            className="btn btn-outline btn-secondary w-full"
+          >
             Be an Admin
           </button>
         )}

@@ -1,16 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+
 import React from "react";
 import { Link, useParams } from "react-router";
 import Loader from "../../Components/Common/Loader";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Details = () => {
   const { id } = useParams();
+  const axiosSecure = useAxiosSecure();
 
   const { data: meal = {}, isLoading } = useQuery({
     queryKey: ["food", id],
     queryFn: async () => {
-      const res = await axios.get(`http://localhost:3000/meals/${id}`);
+      const res = await axiosSecure.get(`/meals/${id}`);
       return res.data;
     },
   });

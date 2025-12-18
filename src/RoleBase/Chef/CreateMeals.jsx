@@ -2,19 +2,20 @@ import React from "react";
 import useAuth from "../../hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { uploadeImg } from "../../utils";
-import axios from "axios";
+
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const CreateMeals = () => {
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
 
   const { user } = useAuth();
   const { mutateAsync } = useMutation({
-    mutationFn: async (mealdata) =>
-      await axios.post(`${import.meta.env.VITE_API_URL}/meals`, mealdata),
+    mutationFn: async (mealdata) => await axiosSecure.post(`/meals`, mealdata),
     onSuccess: (data) => {
       toast.success("seccusfully added", data);
     },

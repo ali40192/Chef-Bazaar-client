@@ -28,16 +28,18 @@ const NavBar = () => {
         </NavLink>
       </li>
 
-      <li>
-        <NavLink
-          to="/dashboard"
-          className={({ isActive }) =>
-            isActive ? "font-bold text-fuchsia-700" : ""
-          }
-        >
-          Dashboard
-        </NavLink>
-      </li>
+      {user && (
+        <li>
+          <NavLink
+            to="/dashboard"
+            className={({ isActive }) =>
+              isActive ? "font-bold text-fuchsia-700" : ""
+            }
+          >
+            Dashboard
+          </NavLink>
+        </li>
+      )}
     </>
   );
   return (
