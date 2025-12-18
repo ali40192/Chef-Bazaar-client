@@ -9,15 +9,38 @@ const ChefSidebar = () => {
       </h4>
       <ul className="menu space-y-1">
         <li>
-          <NavLink to="/dashboard/createmeals" className="flex gap-3">
+          <NavLink
+            to="/dashboard/createmeals"
+            className={({ isActive }) =>
+              isActive
+                ? "font-bold text-md bg-primary text-white rounded-md p-2"
+                : ""
+            }
+          >
             ➕ Create Meal
           </NavLink>
         </li>
         <li>
-          <a className="flex gap-3">🍽 My Meals</a>
+          <NavLink
+            className={({ isActive }) =>
+              isActive
+                ? "font-bold text-md bg-primary text-white rounded-md p-2"
+                : ""
+            }
+          >
+            🍽 My Meals
+          </NavLink>
         </li>
         <li>
-          <a className="flex gap-3">📦 Order Requests</a>
+          <NavLink
+            className={({ isActive }) =>
+              isActive
+                ? "font-bold text-md bg-primary text-white rounded-md p-2"
+                : ""
+            }
+          >
+            📦 Order Requests
+          </NavLink>
         </li>
       </ul>
     </div>

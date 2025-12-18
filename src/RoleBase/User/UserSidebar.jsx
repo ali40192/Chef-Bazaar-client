@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router";
+import { Link, NavLink } from "react-router";
 
 const UserSidebar = () => {
   return (
@@ -9,15 +9,40 @@ const UserSidebar = () => {
       </h4>
       <ul className="menu space-y-1">
         <li>
-          <Link to="/dashboard/my-orders" className="flex gap-3">
+          <NavLink
+            to="/dashboard/my-orders"
+            className={({ isActive }) =>
+              isActive
+                ? "font-bold text-md bg-primary text-white rounded-md p-2"
+                : ""
+            }
+          >
             🛒 My Orders
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <a className="flex gap-3">⭐ My Reviews</a>
+          <NavLink
+            to="/dashboard/my-reviews"
+            className={({ isActive }) =>
+              isActive
+                ? "font-bold text-md bg-primary text-white rounded-md p-2"
+                : ""
+            }
+          >
+            ⭐ My Reviews
+          </NavLink>
         </li>
         <li>
-          <a className="flex gap-3">❤️ Favorite Meal</a>
+          <NavLink
+            to="/dashboard/favourite"
+            className={({ isActive }) =>
+              isActive
+                ? "font-bold text-md bg-primary text-white rounded-md p-2"
+                : ""
+            }
+          >
+            ❤️ Favorite Meal
+          </NavLink>
         </li>
       </ul>
     </div>

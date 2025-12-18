@@ -5,7 +5,8 @@ import Loader from "../../Components/Common/Loader";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 
-const ReviewSection = ({ id, foodDetails, mutate }) => {
+const ReviewSection = ({ meal }) => {
+  const id = meal._id;
   const axiosSecure = useAxiosSecure();
 
   const {
@@ -26,19 +27,13 @@ const ReviewSection = ({ id, foodDetails, mutate }) => {
   });
 
   if (isLoading) {
-    console.log("Loading reviews...");
     return <Loader />;
   }
 
   return (
     <div className=" max-w-5xl mx-auto space-y-5">
       <section className="flex-1">
-        <ReviewForm
-          foodDetails={foodDetails}
-          mutate={mutate}
-          refetch={refetch}
-          id={id}
-        />
+        <ReviewForm refetch={refetch} meal={meal} />
       </section>
       <section className="flex-1">
         <h3 className="text-xl font-semibold mb-4 ">

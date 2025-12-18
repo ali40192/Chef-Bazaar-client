@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router";
+import { Link, NavLink } from "react-router";
 import { MdManageAccounts } from "react-icons/md";
 import { VscGitPullRequestNewChanges } from "react-icons/vsc";
 
@@ -11,17 +11,39 @@ const AdminSidebar = () => {
       </h4>
       <ul className="menu space-y-1">
         <li>
-          <Link to="/dashboard/manage-users" className="flex  gap-3">
+          <NavLink
+            to="/dashboard/manage-users"
+            className={({ isActive }) =>
+              isActive
+                ? "font-bold text-md bg-primary text-white rounded-md p-2"
+                : ""
+            }
+          >
             <MdManageAccounts /> Manage Users
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/dashboard/manage-requests" className="flex gap-3">
+          <NavLink
+            to="/dashboard/manage-requests"
+            className={({ isActive }) =>
+              isActive
+                ? "font-bold text-md bg-primary text-white rounded-md p-2"
+                : ""
+            }
+          >
             <VscGitPullRequestNewChanges /> Manage Requests
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <a className="flex gap-3">🛠 Platform Statistics</a>
+          <NavLink
+            className={({ isActive }) =>
+              isActive
+                ? "font-bold text-md bg-primary text-white rounded-md p-2"
+                : ""
+            }
+          >
+            🛠 Platform Statistics
+          </NavLink>
         </li>
       </ul>
     </div>

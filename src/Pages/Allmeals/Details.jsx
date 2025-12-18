@@ -5,11 +5,11 @@ import Loader from "../../Components/Common/Loader";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import ReviewSection from "./ReviewSection";
 import { toast } from "react-toastify";
-import { useEffect, useState } from "react";
+import useAuth from "../../hooks/useAuth";
 
 const Details = () => {
   const { id } = useParams();
-  const [foodDetails, setFoodDetails] = useState({});
+  const { user } = useAuth();
 
   const axiosSecure = useAxiosSecure();
 
@@ -45,10 +45,25 @@ const Details = () => {
     },
   });
 
-  useEffect(() => {
-    setFoodDetails(meal);
-  }, [meal]);
+  const handleFavourite = async () => {
+    const details = {
+      userEmail: user?.email,
+      mealId: meal._id,
+      mealName: meal.foodName,
+      chefId: meal.chefId,
+      chefName: meal.chefName,
+      price: meal.price,
+      addedTime: new Date().toISOString(),
+      foodImage: meal.foodImage,
+    };
+    try {
+      mutate(details);
 
+      toast.success("Added to favourite successfully");
+    } catch (error) {
+      console.log(error);
+    }
+  };
   if (isLoading) {
     return <Loader></Loader>;
   }
@@ -113,19 +128,22 @@ const Details = () => {
           {/* Order Button */}
           <Link
             to={`/dashboard/order/${id}`}
-            className="btn btn-primary text-white mt-6 px-6 py-3 w-full md:w-auto"
+            className="btn btn-primary text-white mb-3 mt-6 px-6 py-3 w-full md:w-auto"
           >
             Order Now
           </Link>
+          <button
+            onClick={handleFavourite}
+            type="button"
+            className="w-full sm:w-auto border border-primary text-primary px-8 py-3 rounded-md hover:bg-primary hover:text-white"
+          >
+            Add to Favorite
+          </button>
         </div>
       </div>
 
       <div>
-        <ReviewSection
-          foodDetails={foodDetails}
-          mutate={mutate}
-          id={id}
-        ></ReviewSection>
+        <ReviewSection meal={meal}></ReviewSection>
       </div>
     </>
   );

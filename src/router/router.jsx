@@ -20,9 +20,8 @@ import ManageRequests from "../RoleBase/Admin/ManageRequests";
 import ManageUsers from "../RoleBase/Admin/ManageUsers";
 import AdminRoute from "./AdminRoute";
 import ChefRoute from "./ChefRoute";
-
-
-
+import MyReviews from "../RoleBase/User/MyReviews";
+import FavoriteMeal from "../RoleBase/User/FavoriteMeal";
 
 const router = createBrowserRouter([
   {
@@ -118,6 +117,8 @@ const router = createBrowserRouter([
       },
 
       { path: "my-orders", Component: MyOrders },
+      { path: "my-reviews", Component: MyReviews },
+      { path: "favourite", Component: FavoriteMeal },
 
       { path: "success", Component: success },
     ],

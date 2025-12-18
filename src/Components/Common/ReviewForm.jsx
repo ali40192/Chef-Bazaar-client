@@ -6,7 +6,9 @@ import { useForm } from "react-hook-form";
 import { uploadeImg } from "../../utils";
 import useAuth from "../../hooks/useAuth";
 
-const ReviewForm = ({ id, refetch, foodDetails, mutate }) => {
+const ReviewForm = ({ meal, refetch }) => {
+  const id = meal._id;
+  const mealName = meal.foodName;
   const { user } = useAuth();
 
   const axiosSecure = useAxiosSecure();
@@ -39,7 +41,9 @@ const ReviewForm = ({ id, refetch, foodDetails, mutate }) => {
         reviewerImage: imageUrl,
         rating: rating,
         comment: comment,
+        reviewerEmail: user?.email,
         date: date,
+        mealName,
       });
 
       toast.success("review added successfully");
@@ -50,25 +54,6 @@ const ReviewForm = ({ id, refetch, foodDetails, mutate }) => {
   };
 
   ////////favourite button er kaj
-  const handleFavourite = async () => {
-    const details = {
-      userEmail: user?.email,
-      mealId: foodDetails._id,
-      mealName: foodDetails.foodName,
-      chefId: foodDetails.chefId,
-      chefName: foodDetails.chefName,
-      price: foodDetails.price,
-      addedTime: new Date().toISOString(),
-      foodImage: foodDetails.foodImage,
-    };
-    try {
-      mutate(details);
-
-      toast.success("Added to favourite successfully");
-    } catch (error) {
-      toast.error(error.message || "Something went wrong");
-    }
-  };
 
   return (
     <div className="max-w-5xl mx-auto bg-[#FBF8EE] p-5 sm:p-8 md:p-10 rounded-md">
@@ -151,14 +136,6 @@ const ReviewForm = ({ id, refetch, foodDetails, mutate }) => {
             className="w-full sm:w-auto bg-primary text-white px-8 py-3 rounded-md hover:opacity-90"
           >
             Add Review
-          </button>
-
-          <button
-            onClick={handleFavourite}
-            type="button"
-            className="w-full sm:w-auto border border-primary text-primary px-8 py-3 rounded-md hover:bg-primary hover:text-white"
-          >
-            Add to Favorite
           </button>
         </div>
       </form>
