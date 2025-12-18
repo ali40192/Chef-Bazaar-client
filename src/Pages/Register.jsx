@@ -6,13 +6,18 @@ import { Link, useLoaderData, useLocation, useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
 const Register = () => {
-  const loctoion = useLocation();
+  const location = useLocation();
   const navigate = useNavigate();
   const addresses = useLoaderData();
 
-  const { creatUser, UpdateUserprofile } = useAuth();
+  const { createUser, UpdateUserprofile } = useAuth();
 
-  const { register, handleSubmit, watch } = useForm();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
 
   const Allregions = addresses?.map((address) => address.region);
   const regions = [...new Set(Allregions)];
@@ -23,37 +28,45 @@ const Register = () => {
   };
 
   const dynamicDistrict = watch("region");
+  const password = watch("password");
 
   const onformSubmit = async (data) => {
     const {
       username,
       email,
       password,
-      confirmpassword,
+      confirmPassword,
       image,
       region,
       district,
     } = data;
 
-    creatUser(email, password)
-      .then((result) => {
-        toast.success("Successfully Register", result);
-        navigate(location.state || "/");
-      })
-      .catch((error) => {
-        console.log(error);
+    try {
+      // Create user account
+      await createUser(email, password);
+
+      // Upload image
+      const imageFile = image[0];
+      const imageUrl = await uploadeImg(imageFile);
+
+      // Update user profile
+      await UpdateUserprofile(username, imageUrl);
+
+      // Save user data to database
+      await saveOrUpdateUser({
+        name: username,
+        email,
+        imageUrl,
+        region,
+        district,
       });
 
-    const imageFile = image[0];
-    const imageUrl = await uploadeImg(imageFile);
-    UpdateUserprofile(username, imageUrl);
-    await saveOrUpdateUser({
-      name: username,
-      email,
-      imageUrl,
-      region,
-      district,
-    });
+      toast.success("Successfully Registered!");
+      navigate(location.state || "/");
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message || "Registration failed");
+    }
   };
 
   return (
@@ -80,11 +93,18 @@ const Register = () => {
                     </label>
                     <div class="mt-2">
                       <input
-                        {...register("username")}
+                        {...register("username", {
+                          required: "Username is required",
+                        })}
                         placeholder="Full Name"
                         type="text"
                         class="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       />
+                      {errors.username && (
+                        <p className="text-red-500 text-sm">
+                          {errors.username.message}
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div>
@@ -93,12 +113,23 @@ const Register = () => {
                     </label>
                     <div class="mt-2">
                       <input
-                        {...register("email")}
+                        {...register("email", {
+                          required: "Email is required",
+                          pattern: {
+                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                            message: "Invalid email address",
+                          },
+                        })}
                         placeholder="Email"
                         type="email"
                         class="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                         name="email"
                       />
+                      {errors.email && (
+                        <p className="text-red-500 text-sm">
+                          {errors.email.message}
+                        </p>
+                      )}
                     </div>
                   </div>
                   <div>
@@ -109,12 +140,23 @@ const Register = () => {
                     </div>
                     <div class="mt-2">
                       <input
-                        {...register("password")}
+                        {...register("password", {
+                          required: "Password is required",
+                          minLength: {
+                            value: 6,
+                            message: "Password must be at least 6 characters",
+                          },
+                        })}
                         placeholder="Password"
                         type="password"
                         class="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                         name="password"
                       />
+                      {errors.password && (
+                        <p className="text-red-500 text-sm">
+                          {errors.password.message}
+                        </p>
+                      )}
                     </div>
 
                     {/* confirmpassword */}
@@ -126,11 +168,20 @@ const Register = () => {
                     </div>
                     <div class="mt-2">
                       <input
-                        {...register("conpassword")}
+                        {...register("confirmPassword", {
+                          required: "Confirm password is required",
+                          validate: (value) =>
+                            value === password || "Passwords do not match",
+                        })}
                         placeholder="Confirm Password"
                         type="password"
                         class="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       />
+                      {errors.confirmPassword && (
+                        <p className="text-red-500 text-sm">
+                          {errors.confirmPassword.message}
+                        </p>
+                      )}
                     </div>
 
                     {/* profile */}
@@ -144,6 +195,7 @@ const Register = () => {
                         {...register("image")}
                         class="file-input w-full max-w-xs"
                         type="file"
+                        accept="image/*"
                       />
                     </div>
                   </div>
@@ -155,27 +207,38 @@ const Register = () => {
                   </div>
                   <div class="mt-2 mb-8">
                     <select
-                      {...register("region")}
-                      defaultValue="Pick Your Region"
+                      {...register("region", {
+                        required: "Please select a region",
+                      })}
                       className="select"
                     >
-                      <option disabled={true}>Pick Your Region</option>
+                      <option value="" disabled>
+                        Pick Your Region
+                      </option>
                       {regions.map((region, index) => (
                         <option key={index} value={region}>
                           {region}
                         </option>
                       ))}
                     </select>
+                    {errors.region && (
+                      <p className="text-red-500 text-sm">
+                        {errors.region.message}
+                      </p>
+                    )}
                   </div>
 
                   <div class="mt-2 mb-8">
                     <select
-                      {...register("district")}
-                      defaultValue="Pick Your District"
+                      {...register("district", {
+                        required: "Please select a district",
+                      })}
                       className="select"
                     >
-                      <option disabled={true}>Pick Your District</option>
-                      {districsByRegion(dynamicDistrict).map(
+                      <option value="" disabled>
+                        Pick Your District
+                      </option>
+                      {districsByRegion(dynamicDistrict)?.map(
                         (district, index) => (
                           <option key={index} value={district}>
                             {district}
@@ -183,6 +246,11 @@ const Register = () => {
                         )
                       )}
                     </select>
+                    {errors.district && (
+                      <p className="text-red-500 text-sm">
+                        {errors.district.message}
+                      </p>
+                    )}
                   </div>
                   {/* button */}
                   <div>

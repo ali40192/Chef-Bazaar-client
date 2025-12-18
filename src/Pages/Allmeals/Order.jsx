@@ -240,7 +240,7 @@ const Order = () => {
           <button
             onClick={confirmOrder}
             type="submit"
-            className="btn btn-error text-white"
+            className="btn btn-primary text-white"
           >
             Confirm Order
           </button>

@@ -2,6 +2,8 @@ import React from "react";
 import useAuth from "../../hooks/useAuth";
 import { Link, NavLink } from "react-router";
 
+import Logo from "./Logo";
+
 const NavBar = () => {
   const { user, signOutUser } = useAuth();
   const Links = (
@@ -9,7 +11,7 @@ const NavBar = () => {
       <li>
         <NavLink
           className={({ isActive }) =>
-            isActive ? "font-bold text-fuchsia-700" : ""
+            isActive ? "font-bold text-md text-[#E2852E]" : ""
           }
           to="/"
         >
@@ -21,7 +23,7 @@ const NavBar = () => {
         <NavLink
           to="/allmeals"
           className={({ isActive }) =>
-            isActive ? "font-bold text-fuchsia-700" : ""
+            isActive ? "font-bold text-md text-[#E2852E]" : ""
           }
         >
           Meals
@@ -33,7 +35,7 @@ const NavBar = () => {
           <NavLink
             to="/dashboard"
             className={({ isActive }) =>
-              isActive ? "font-bold text-fuchsia-700" : ""
+              isActive ? "font-bold text-md text-[#E2852E]" : ""
             }
           >
             Dashboard
@@ -43,7 +45,7 @@ const NavBar = () => {
     </>
   );
   return (
-    <div className="navbar bg-base-100 shadow-sm">
+    <div className="navbar bg-base-100 shadow-sm border-b border-b-[#E2852E]">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -70,18 +72,20 @@ const NavBar = () => {
             {Links}
           </ul>
         </div>
-        <a className="btn btn-ghost text-xl">LocalChefBazaar</a>
+        <div>
+          <Logo></Logo>
+        </div>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{Links}</ul>
       </div>
       <div className="navbar-end">
         {user ? (
-          <button onClick={signOutUser} className="btn">
+          <button onClick={signOutUser} className="btn btn-primary ">
             SignOut
           </button>
         ) : (
-          <Link to="/auth/login" className="btn">
+          <Link to="/auth/login" className="btn btn-secondary">
             Login
           </Link>
         )}

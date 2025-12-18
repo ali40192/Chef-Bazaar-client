@@ -1,18 +1,22 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
-import React from "react";
 import { Link, useParams } from "react-router";
 import Loader from "../../Components/Common/Loader";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import ReviewSection from "./ReviewSection";
+import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
 
 const Details = () => {
   const { id } = useParams();
+  const [foodDetails, setFoodDetails] = useState({});
+
   const axiosSecure = useAxiosSecure();
 
   const { data: meal = {}, isLoading } = useQuery({
     queryKey: ["food", id],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/meals/${id}`);
+      const res = await axiosSecure(`/meals/${id}`);
       return res.data;
     },
   });
@@ -27,6 +31,23 @@ const Details = () => {
     chefExperience,
     chefId,
   } = meal;
+
+  ///favourite button er kaj
+  const { mutate, refetch } = useMutation({
+    mutationFn: async (favoriteData) =>
+      await axiosSecure.post(`/favourite-meal`, favoriteData),
+    onSuccess: (data) => {
+      toast.success("Added to favourite collection!", data);
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Something went wrong");
+    },
+  });
+
+  useEffect(() => {
+    setFoodDetails(meal);
+  }, [meal]);
 
   if (isLoading) {
     return <Loader></Loader>;
@@ -47,7 +68,7 @@ const Details = () => {
         {/* Content Section */}
         <div className="flex flex-col justify-center">
           {/* Food Name */}
-          <h1 className="text-3xl font-bold text-red-700">{foodName}</h1>
+          <h1 className="text-3xl font-bold text-primary">{foodName}</h1>
 
           {/* Chef Name */}
           <p className="mt-2 text-lg font-semibold text-gray-800">
@@ -92,11 +113,19 @@ const Details = () => {
           {/* Order Button */}
           <Link
             to={`/dashboard/order/${id}`}
-            className="btn btn-error text-white mt-6 px-6 py-3 w-full md:w-auto"
+            className="btn btn-primary text-white mt-6 px-6 py-3 w-full md:w-auto"
           >
             Order Now
           </Link>
         </div>
+      </div>
+
+      <div>
+        <ReviewSection
+          foodDetails={foodDetails}
+          mutate={mutate}
+          id={id}
+        ></ReviewSection>
       </div>
     </>
   );

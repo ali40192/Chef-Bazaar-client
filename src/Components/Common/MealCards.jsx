@@ -45,7 +45,7 @@ const MealCards = ({ meal }) => {
       {/* DaisyUI Details Button */}
       <Link
         to={`/meals/${_id}`}
-        className="btn btn-error w-full mt-4 text-white"
+        className="btn btn-primary w-full mt-4 text-white"
       >
         See Details
       </Link>
