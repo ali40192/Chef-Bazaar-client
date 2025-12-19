@@ -81,7 +81,7 @@ const DashboardLayout = () => {
           <div className="p-4 border-t bg-base-100">
             <button
               onClick={signOutUser}
-              className="btn btn-outline btn-error w-full"
+              className="btn btn-primary btn-error w-full"
             >
               Logout
             </button>

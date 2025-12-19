@@ -36,11 +36,11 @@ const AdminSidebar = () => {
         </li>
         <li>
           <NavLink
-            className={({ isActive }) =>
-              isActive
-                ? "font-bold text-md bg-primary text-white rounded-md p-2"
-                : ""
-            }
+          // className={({ isActive }) =>
+          //   isActive
+          //     ? "font-bold text-md bg-primary text-white rounded-md p-2"
+          //     : ""
+          // }
           >
             🛠 Platform Statistics
           </NavLink>

@@ -7,7 +7,7 @@ const AuthLayout = () => {
   return (
     <div>
       <NavBar></NavBar>
-      <h1>this is Auth</h1>
+     
       <div className="min-h-screen">
         <Outlet></Outlet>
       </div>

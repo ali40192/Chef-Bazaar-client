@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
 
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
@@ -89,22 +88,28 @@ const MyOrders = () => {
               <th>{order.deliveryTime}</th>
               <th>{order.chefName}</th>
               <th>{order.chefId}</th>
-              <th>
-                {order.paymentStatus === "Pending" ? (
-                  <button
-                    onClick={() => {
-                      handlePayment(order);
-                    }}
-                    className="btn btn-secondary btn-sm"
-                  >
-                    Pay
-                  </button>
-                ) : (
-                  <h1 className="text-green-600 font-bold">
-                    {order.paymentStatus}
-                  </h1>
-                )}
-              </th>
+              {order.orderStatus === "accepted" ? (
+                <th>
+                  {order.paymentStatus === "Pending" ? (
+                    <button
+                      onClick={() => {
+                        handlePayment(order);
+                      }}
+                      className="btn btn-secondary btn-sm"
+                    >
+                      Pay
+                    </button>
+                  ) : (
+                    <h1 className="text-green-600 font-bold">
+                      {order.paymentStatus}
+                    </h1>
+                  )}
+                </th>
+              ) : (
+                <p className="font-bold text-xs text-red-600">
+                  Request Pending
+                </p>
+              )}
             </tr>
           ))}
         </tbody>

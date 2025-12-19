@@ -6,10 +6,15 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 import ReviewSection from "./ReviewSection";
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
+import useRole from "../../hooks/useRole";
+import useStatus from "../../hooks/useStatus";
 
 const Details = () => {
   const { id } = useParams();
   const { user } = useAuth();
+
+  const [role] = useRole();
+  const [status] = useStatus();
 
   const axiosSecure = useAxiosSecure();
 
@@ -64,6 +69,7 @@ const Details = () => {
       console.log(error);
     }
   };
+
   if (isLoading) {
     return <Loader></Loader>;
   }
@@ -126,12 +132,14 @@ const Details = () => {
           </div>
 
           {/* Order Button */}
-          <Link
-            to={`/dashboard/order/${id}`}
-            className="btn btn-primary text-white mb-3 mt-6 px-6 py-3 w-full md:w-auto"
-          >
-            Order Now
-          </Link>
+          {role === "user" && status === "active" && (
+            <Link
+              to={`/dashboard/order/${id}`}
+              className="btn btn-primary text-white mb-3 mt-6 px-6 py-3 w-full md:w-auto"
+            >
+              Order Now
+            </Link>
+          )}
           <button
             onClick={handleFavourite}
             type="button"

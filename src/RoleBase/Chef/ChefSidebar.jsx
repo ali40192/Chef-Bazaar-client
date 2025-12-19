@@ -22,6 +22,7 @@ const ChefSidebar = () => {
         </li>
         <li>
           <NavLink
+            to="/dashboard/my-meals"
             className={({ isActive }) =>
               isActive
                 ? "font-bold text-md bg-primary text-white rounded-md p-2"
@@ -33,6 +34,7 @@ const ChefSidebar = () => {
         </li>
         <li>
           <NavLink
+          to="/dashboard/order-requests"
             className={({ isActive }) =>
               isActive
                 ? "font-bold text-md bg-primary text-white rounded-md p-2"

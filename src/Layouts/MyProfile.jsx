@@ -64,6 +64,14 @@ const MyProfile = () => {
       confirmButtonText: "Yes, I Want!",
     }).then((result) => {
       if (result.isConfirmed) {
+        try {
+          axiosSecure.post("/become-admin", { userDetails }).then((res) => {
+            toast.success("Your request send to admin", res);
+          });
+        } catch (error) {
+          toast.error(error.message);
+        }
+
         Swal.fire({
           title: "Confirmed!",
           text: "Your file Send To Admin.",
@@ -83,7 +91,7 @@ const MyProfile = () => {
         : "Dhaka, Bangladesh",
     role: role,
     status: userDetails?.status,
-    chefId: "CHEF-982347",
+    chefId: userDetails?.chefId,
   };
 
   if (isRoleloading) {

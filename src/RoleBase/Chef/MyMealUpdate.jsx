@@ -1,32 +1,57 @@
-import useAuth from "../../hooks/useAuth";
+import React from "react";
 import { useForm } from "react-hook-form";
-import { uploadeImg } from "../../utils";
-
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useAuth from "../../hooks/useAuth";
+import { useParams } from "react-router";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { uploadeImg } from "../../utils";
+import { toast } from "react-toastify";
+import Loader from "../../Components/Common/Loader";
 
-import useRole from "../../hooks/useRole";
-import useStatus from "../../hooks/useStatus";
-import useChefid from "../../hooks/useChefid";
-
-const CreateMeals = () => {
-  const [role] = useRole();
-  const [status] = useStatus();
-  const { register, handleSubmit } = useForm();
-  const navigate = useNavigate();
+const MyMealUpdate = () => {
+  const { id } = useParams();
+  console.log(id);
   const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
-  const [chefId] = useChefid();
+  const navigate = useNavigate();
 
-  const { mutateAsync } = useMutation({
-    mutationFn: async (mealdata) => await axiosSecure.post(`/meals`, mealdata),
-    onSuccess: (data) => {
-      toast.success("Successfully added", data);
+  const { data: MySingleMeals = [] } = useQuery({
+    queryKey: ["mymeals", id],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get(`/mymeals/${id}`);
+      return data;
     },
   });
 
+  const { mutateAsync, isLoading, refatch } = useMutation({
+    mutationFn: async (data) => {
+      const { data: res } = await axiosSecure.patch(`/mymeals/${id}`, data);
+      return res;
+    },
+    onSuccess: (data) => {
+      toast.success("Meal Updated Successfully", data);
+      navigate("/allmeals");
+      refatch();
+    },
+  });
+
+  const {
+    chefExperience,
+
+    chefName,
+    estimatedDeliveryTime,
+    foodImage,
+    foodName,
+    ingredients,
+    price,
+    rating,
+  } = MySingleMeals;
+
+  const { register, handleSubmit } = useForm();
+  //   const navigate = useNavigate();
+
+  //////submit or update korar por page e redirect kora hobe
   const onSubmit = async (data) => {
     const {
       foodName,
@@ -40,26 +65,29 @@ const CreateMeals = () => {
       email,
     } = data;
 
-    const imageFile = image[0];
-    const imageUrl = await uploadeImg(imageFile);
+    let imageUrl = MySingleMeals.foodImage;
+    if (image && image[0]) {
+      const imageFile = image[0];
+      imageUrl = await uploadeImg(imageFile);
+    }
 
-    const meal = {
-      foodName,
-      chefName,
+    const Updatemeal = {
+      foodName: foodName,
+      chefName: chefName,
       foodImage: imageUrl,
-      price,
-      rating,
-      ingredients,
+      price: price,
+      rating: rating,
+      ingredients: ingredients,
       estimatedDeliveryTime: estimatedTime,
-      chefExperience,
-      chefId: chefId || "2321",
+      chefExperience: chefExperience,
       userEmail: email,
-      createdAt: new Date().toISOString(),
     };
-    mutateAsync(meal);
-    navigate("/allmeals");
-    window.location.reload();
+    mutateAsync(Updatemeal);
   };
+
+  if (isLoading) {
+    return <Loader></Loader>;
+  }
 
   return (
     <div className="flex justify-center py-10 px-4">
@@ -68,7 +96,7 @@ const CreateMeals = () => {
         className="w-full max-w-xl p-8 bg-base-100 shadow-xl rounded-xl space-y-5 border border-base-300"
       >
         <h2 className="text-3xl font-bold text-center mb-6">
-          Add New Food Item
+          Update your Food
         </h2>
 
         {/* Food Name */}
@@ -81,6 +109,21 @@ const CreateMeals = () => {
             type="text"
             placeholder="Enter food name"
             className="input input-bordered w-full"
+            defaultValue={foodName}
+          />
+        </div>
+
+        {/* Food Price */}
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text font-semibold">Food Price</span>
+          </label>
+          <input
+            {...register("price")}
+            type="text"
+            placeholder="Enter food price"
+            className="input input-bordered w-full"
+            defaultValue={price}
           />
         </div>
 
@@ -94,6 +137,7 @@ const CreateMeals = () => {
             type="text"
             placeholder="Enter chef name"
             className="input input-bordered w-full"
+            defaultValue={chefName}
           />
         </div>
 
@@ -107,19 +151,16 @@ const CreateMeals = () => {
             type="file"
             className="file-input file-input-bordered w-full"
           />
-        </div>
-
-        {/* Price */}
-        <div className="form-control">
-          <label className="label">
-            <span className="label-text font-semibold">Price</span>
-          </label>
-          <input
-            {...register("price")}
-            type="number"
-            placeholder="Enter price"
-            className="input input-bordered w-full"
-          />
+          {foodImage && (
+            <p className="text-sm text-gray-500 mt-1">
+              Current image:{" "}
+              <img
+                src={foodImage}
+                alt="Current"
+                className="w-16 h-16 inline-block"
+              />
+            </p>
+          )}
         </div>
 
         {/* Rating */}
@@ -135,6 +176,7 @@ const CreateMeals = () => {
             step="0.1"
             placeholder="e.g., 4.5"
             className="input input-bordered w-full"
+            defaultValue={rating}
           />
         </div>
 
@@ -146,7 +188,7 @@ const CreateMeals = () => {
           <select
             {...register("ingredients")}
             className="select select-bordered w-full"
-            defaultValue=""
+            defaultValue={ingredients}
           >
             <option disabled value="">
               Select Ingredients
@@ -174,6 +216,7 @@ const CreateMeals = () => {
             type="text"
             placeholder="e.g., 30–40 mins"
             className="input input-bordered w-full"
+            defaultValue={estimatedDeliveryTime}
           />
         </div>
 
@@ -185,6 +228,7 @@ const CreateMeals = () => {
           <select
             {...register("chefExperience")}
             className="select select-bordered w-full"
+            defaultValue={chefExperience}
           >
             <option>1 year</option>
             <option>2 years</option>
@@ -202,12 +246,10 @@ const CreateMeals = () => {
             </span>
           </label>
           <input
-            {...register("chefId")}
             type="text"
             disabled
             placeholder="Generated after approval"
             className="input input-bordered w-full bg-base-200 cursor-not-allowed"
-            defaultValue={chefId}
           />
         </div>
 
@@ -224,14 +266,12 @@ const CreateMeals = () => {
           />
         </div>
 
-        {role === "chef" && status === "active" && (
-          <button type="submit" className="btn btn-primary w-full text-lg mt-4">
-            Submit
-          </button>
-        )}
+        <button type="submit" className="btn btn-primary w-full text-lg mt-4">
+          Update
+        </button>
       </form>
     </div>
   );
 };
 
-export default CreateMeals;
+export default MyMealUpdate;

@@ -23,11 +23,50 @@ const ManageRequests = () => {
     enabled: !!user?.email, // Only run if user email exists
   });
 
+  const { data: Adminrequests, refetch: refetchAdmin } = useQuery({
+    queryKey: ["admin-requests", user?.email],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/admin-requests`);
+      return res.data;
+    },
+    enabled: !!user?.email, // Only run if user email exists
+  });
+
   const updateRoleRequest = async (email, role) => {
     try {
       await axiosSecure.patch(`/update-role`, { email, role });
       toast.success("Role Updated Successfully");
-      refetch(); // Refresh the requests list
+      refetch();
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const updateAdminRoleRequest = async (email, role) => {
+    try {
+      await axiosSecure.patch(`/become-admin`, { email, role });
+      toast.success("Role Updated Successfully");
+      refetchAdmin();
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleChefReject = async (email) => {
+    try {
+      await axiosSecure.patch(`/become-rejectChef`, { email });
+      toast.error("Your Request is Rejected");
+      window.location.reload();
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleAdminReject = async (email) => {
+    try {
+      await axiosSecure.patch(`/become-rejectAdmin`, { email });
+      toast.error("Your Request is Rejected");
+      window.location.reload();
     } catch (error) {
       toast.error(error.message);
     }
@@ -69,15 +108,101 @@ const ManageRequests = () => {
                 <td>{req.userEmail}</td>
                 <td>{req.requestType}</td>
                 <td>{req.requestStatus}</td>
-                <td>
-                  <button
-                    onClick={() =>
-                      updateRoleRequest(req.userEmail, req.requestType)
-                    }
-                    className="btn btn-secondary"
-                  >
-                    Make Chef
-                  </button>
+                <td className="flex flex-col gap-1">
+                  {req.requestStatus === "rejected" ? (
+                    <button
+                      disabled="true"
+                      onClick={() =>
+                        updateRoleRequest(req.userEmail, req.requestType)
+                      }
+                      className="btn btn-xs border border-primary"
+                    >
+                      Make Chef
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() =>
+                        updateRoleRequest(req.userEmail, req.requestType)
+                      }
+                      className="btn btn-xs border border-primary"
+                    >
+                      Make Chef
+                    </button>
+                  )}
+                  {req.requestStatus === "rejected" ? (
+                    <button
+                      disabled="true"
+                      className="btn btn-xs border border-primary"
+                    >
+                      Rejected
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() =>
+                        handleChefReject(req.userEmail, req.requestStatus)
+                      }
+                      className="btn btn-xs border border-primary"
+                    >
+                      Reject
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="4" className="text-center py-4">
+                No chef requests found
+              </td>
+            </tr>
+          )}
+
+          {/* row 2 */}
+          {Adminrequests && Adminrequests.length > 0 ? (
+            Adminrequests.map((req, i) => (
+              <tr key={i}>
+                <th>{i + 1}</th>
+                <td>{req.userName}</td>
+                <td>{req.userEmail}</td>
+                <td>{req.requestType}</td>
+                <td>{req.requestStatus}</td>
+                <td className="flex flex-col gap-1">
+                  {req.requestStatus === "rejected" ? (
+                    <button
+                      disabled="true"
+                      onClick={() =>
+                        updateAdminRoleRequest(req.userEmail, req.requestStatus)
+                      }
+                      className="btn btn-xs border border-primary"
+                    >
+                      Make Admin
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() =>
+                        updateAdminRoleRequest(req.userEmail, req.requestStatus)
+                      }
+                      className="btn btn-xs border border-primary"
+                    >
+                      Make Admin
+                    </button>
+                  )}
+                  {req.requestStatus === "rejected" ? (
+                    <button
+                      disabled="true"
+                      onClick={() => handleAdminReject(req.userEmail)}
+                      className="btn btn-xs border border-primary"
+                    >
+                      Reject
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleAdminReject(req.userEmail)}
+                      className="btn btn-xs border border-primary"
+                    >
+                      Reject
+                    </button>
+                  )}
                 </td>
               </tr>
             ))

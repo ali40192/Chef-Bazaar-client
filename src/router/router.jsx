@@ -22,6 +22,9 @@ import AdminRoute from "./AdminRoute";
 import ChefRoute from "./ChefRoute";
 import MyReviews from "../RoleBase/User/MyReviews";
 import FavoriteMeal from "../RoleBase/User/FavoriteMeal";
+import MyMeals from "../RoleBase/Chef/MyMeals";
+import OrderRequests from "../RoleBase/Chef/OrderRequests";
+import MyMealUpdate from "../RoleBase/Chef/MyMealUpdate";
 
 const router = createBrowserRouter([
   {
@@ -103,6 +106,9 @@ const router = createBrowserRouter([
 
       // chef
       { path: "createmeals", Component: CreateMeals },
+      { path: "my-meals", element: <MyMeals></MyMeals> },
+      { path: "my-meals/:id", element: <MyMealUpdate /> },
+      { path: "order-requests", element: <OrderRequests></OrderRequests> },
 
       ///user
       {
