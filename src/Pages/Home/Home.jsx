@@ -52,7 +52,7 @@ const Home = () => {
         ))}
       </div>
       <div className="my-10">
-        <h1 className="text-center text-[#E2852E] my-4">
+        <h1 className="text-center text-[#E2852E] my-10">
           <span className="text-2xl font-bold">Customers</span> Reviews
         </h1>
         <Review></Review>

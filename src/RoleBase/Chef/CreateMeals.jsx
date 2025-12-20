@@ -7,12 +7,10 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 
-import useRole from "../../hooks/useRole";
 import useStatus from "../../hooks/useStatus";
 import useChefid from "../../hooks/useChefid";
 
 const CreateMeals = () => {
-  const [role] = useRole();
   const [status] = useStatus();
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
@@ -224,7 +222,7 @@ const CreateMeals = () => {
           />
         </div>
 
-        {role === "chef" && status === "active" && (
+        {status === "active" && (
           <button type="submit" className="btn btn-primary w-full text-lg mt-4">
             Submit
           </button>

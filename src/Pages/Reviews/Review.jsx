@@ -7,8 +7,24 @@ import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 
 import { Autoplay, EffectCoverflow, Pagination } from "swiper/modules";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
+import HomePageReview from "./HomePageReview";
+import Loader from "../../Components/Common/Loader";
 
 const Review = () => {
+  const axiosSecure = useAxiosSecure();
+
+  const { data: AllReview = [], isLoading } = useQuery({
+    queryKey: ["reviewhome"],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get("/reviewhome");
+      return data;
+    },
+  });
+
+  if (isLoading) return <Loader />;
+
   return (
     <>
       <Swiper
@@ -33,33 +49,11 @@ const Review = () => {
         modules={[EffectCoverflow, Pagination, Autoplay]}
         className="mySwiper"
       >
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-1.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-2.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-4.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-5.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-6.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-7.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-8.jpg" />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img src="https://swiperjs.com/demos/images/nature-9.jpg" />
-        </SwiperSlide>
+        {AllReview.map((review) => (
+          <SwiperSlide>
+            <HomePageReview review={review} />
+          </SwiperSlide>
+        ))}
       </Swiper>
     </>
   );

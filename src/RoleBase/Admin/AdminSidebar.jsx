@@ -1,7 +1,8 @@
 import React from "react";
 import { Link, NavLink } from "react-router";
 import { MdManageAccounts } from "react-icons/md";
-import { VscGitPullRequestNewChanges } from "react-icons/vsc";
+import { RiAdminFill } from "react-icons/ri";
+import { GiNetworkBars } from "react-icons/gi";
 
 const AdminSidebar = () => {
   return (
@@ -31,18 +32,19 @@ const AdminSidebar = () => {
                 : ""
             }
           >
-            <VscGitPullRequestNewChanges /> Manage Requests
+            <RiAdminFill /> Manage Requests
           </NavLink>
         </li>
         <li>
           <NavLink
-          // className={({ isActive }) =>
-          //   isActive
-          //     ? "font-bold text-md bg-primary text-white rounded-md p-2"
-          //     : ""
-          // }
+            to="/dashboard/platform-statistics"
+            className={({ isActive }) =>
+              isActive
+                ? "font-bold text-md bg-primary text-white rounded-md p-2"
+                : ""
+            }
           >
-            🛠 Platform Statistics
+            <GiNetworkBars /> Platform Statistics
           </NavLink>
         </li>
       </ul>

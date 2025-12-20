@@ -25,6 +25,7 @@ import FavoriteMeal from "../RoleBase/User/FavoriteMeal";
 import MyMeals from "../RoleBase/Chef/MyMeals";
 import OrderRequests from "../RoleBase/Chef/OrderRequests";
 import MyMealUpdate from "../RoleBase/Chef/MyMealUpdate";
+import PlatformStatistics from "../RoleBase/Admin/PlatformStatistics";
 
 const router = createBrowserRouter([
   {
@@ -103,12 +104,58 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      {
+        path: "platform-statistics",
+        element: (
+          <PrivateRoute>
+            <AdminRoute>
+              <PlatformStatistics></PlatformStatistics>
+            </AdminRoute>
+          </PrivateRoute>
+        ),
+      },
 
       // chef
-      { path: "createmeals", Component: CreateMeals },
-      { path: "my-meals", element: <MyMeals></MyMeals> },
-      { path: "my-meals/:id", element: <MyMealUpdate /> },
-      { path: "order-requests", element: <OrderRequests></OrderRequests> },
+      {
+        path: "createmeals",
+        element: (
+          <PrivateRoute>
+            <ChefRoute>
+              <CreateMeals></CreateMeals>
+            </ChefRoute>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "my-meals",
+        element: (
+          <PrivateRoute>
+            <ChefRoute>
+              <MyMeals></MyMeals>
+            </ChefRoute>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "my-meals/:id",
+        element: (
+          <PrivateRoute>
+            <ChefRoute>
+              <MyMealUpdate />
+            </ChefRoute>
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "order-requests",
+        element: (
+          <PrivateRoute>
+            <ChefRoute>
+              <OrderRequests></OrderRequests>
+            </ChefRoute>
+          </PrivateRoute>
+        ),
+      },
 
       ///user
       {

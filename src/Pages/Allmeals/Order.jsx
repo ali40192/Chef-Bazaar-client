@@ -174,6 +174,7 @@ const Order = () => {
             <div>
               <label className="block font-medium">Chef ID</label>
               <input
+                readOnly={true}
                 {...register("chefId")}
                 type="text"
                 placeholder="Chef ID"

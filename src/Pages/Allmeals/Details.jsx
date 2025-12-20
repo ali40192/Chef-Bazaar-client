@@ -42,11 +42,10 @@ const Details = () => {
     mutationFn: async (favoriteData) =>
       await axiosSecure.post(`/favourite-meal`, favoriteData),
     onSuccess: (data) => {
-      toast.success("Added to favourite collection!", data);
-      refetch();
+      toast.success("Added to favourite successfully", data);
     },
     onError: (error) => {
-      toast.error(error.message || "Something went wrong");
+      toast.error("Already added to favourite", error);
     },
   });
 
@@ -64,9 +63,9 @@ const Details = () => {
     try {
       mutate(details);
 
-      toast.success("Added to favourite successfully");
+      refetch();
     } catch (error) {
-      console.log(error);
+      console.log("Already added to favourite", error);
     }
   };
 
@@ -132,7 +131,7 @@ const Details = () => {
           </div>
 
           {/* Order Button */}
-          {role === "user" && status === "active" && (
+          {status === "active" && (
             <Link
               to={`/dashboard/order/${id}`}
               className="btn btn-primary text-white mb-3 mt-6 px-6 py-3 w-full md:w-auto"

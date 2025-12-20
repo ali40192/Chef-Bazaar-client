@@ -45,8 +45,8 @@ const NavBar = () => {
     </>
   );
   return (
-    <div className="navbar bg-base-100 shadow-sm border-b border-b-[#E2852E]">
-      <div className="navbar-start">
+    <div className="navbar  bg-base-100 shadow-sm border-b border-b-[#E2852E]">
+      <div className="navbar-start ml-8">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
             <svg
@@ -79,7 +79,7 @@ const NavBar = () => {
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{Links}</ul>
       </div>
-      <div className="navbar-end">
+      <div className="navbar-end mr-8">
         {user ? (
           <button onClick={signOutUser} className="btn btn-primary ">
             SignOut
