@@ -8,7 +8,11 @@ import { toast } from "react-toastify";
 const ManageUsers = () => {
   const axiosSecure = useAxiosSecure();
 
-  const { data: users, isLoading } = useQuery({
+  const {
+    data: users,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["all-users"],
     queryFn: async () => {
       const { data } = await axiosSecure.get("/all-users");
@@ -20,7 +24,7 @@ const ManageUsers = () => {
     try {
       const { data } = await axiosSecure.patch(`/become-fraud`, { email });
       toast.success("successfully became fraud", data);
-      window.location.reload();
+      refetch();
     } catch (error) {
       toast.error(error.message);
     }
@@ -51,10 +55,25 @@ const ManageUsers = () => {
               (
                 <tr key={index}>
                   <th>{index + 1}</th>
-                  <td>{user.name}</td>
+                  <td className="font-bold text-md text-primary">
+                    {user.name}
+                  </td>
                   <td>{user.email}</td>
-                  <td>{user.status}</td>
-                  <td>{user.role}</td>
+                  <td>
+                    {user.status === "active" ? (
+                      <p className="text-green-500 font-bold">Active</p>
+                    ) : (
+                      <p className="text-red-500 font-bold">Fraud</p>
+                    )}
+                  </td>
+                  <td>
+                    {" "}
+                    {user.role === "chef" ? (
+                      <p className="text-green-500 font-bold">CHEF</p>
+                    ) : (
+                      <p className="text-red-500 font-bold">USER</p>
+                    )}
+                  </td>
                   <td>
                     {user.status === "fraud" ? (
                       <button
@@ -67,7 +86,7 @@ const ManageUsers = () => {
                     ) : (
                       <button
                         onClick={() => handleFraude(user.email)}
-                        className="btn btn-xs  btn-active"
+                        className="btn btn-xs  btn-active text-white bg-red-600"
                       >
                         Make Fraud
                       </button>

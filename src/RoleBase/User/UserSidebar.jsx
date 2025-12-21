@@ -14,7 +14,7 @@ const UserSidebar = () => {
             className={({ isActive }) =>
               isActive
                 ? "font-bold text-md bg-primary text-white rounded-md p-2"
-                : ""
+                : "border-b border-gray-200 text-md p-2  shadow-md hover:bg-gray-100 hover:text-primary"
             }
           >
             🛒 My Orders
@@ -26,7 +26,7 @@ const UserSidebar = () => {
             className={({ isActive }) =>
               isActive
                 ? "font-bold text-md bg-primary text-white rounded-md p-2"
-                : ""
+                : "border-b border-gray-200 text-md p-2  shadow-md hover:bg-gray-100 hover:text-primary"
             }
           >
             ⭐ My Reviews
@@ -38,7 +38,7 @@ const UserSidebar = () => {
             className={({ isActive }) =>
               isActive
                 ? "font-bold text-md bg-primary text-white rounded-md p-2"
-                : ""
+                : "border-b border-gray-200 text-md p-2  shadow-md hover:bg-gray-100 hover:text-primary"
             }
           >
             ❤️ Favorite Meal

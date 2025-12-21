@@ -104,10 +104,23 @@ const ManageRequests = () => {
             requests.map((req, i) => (
               <tr key={i}>
                 <th>{i + 1}</th>
-                <td>{req.userName}</td>
+                <td className="text-primary">{req.userName}</td>
                 <td>{req.userEmail}</td>
-                <td>{req.requestType}</td>
-                <td>{req.requestStatus}</td>
+                <td>
+                  {req.requestType === "admin" ? (
+                    <p className="text-green-500">ADMIN</p>
+                  ) : (
+                    <p className="text-red-500">CHEF</p>
+                  )}
+                </td>
+                <td>
+                  {" "}
+                  {req.requestStatus === "pending" ? (
+                    <p className="text-green-500">Pending</p>
+                  ) : (
+                    <p className="text-red-500">Rejected</p>
+                  )}
+                </td>
                 <td className="flex flex-col gap-1">
                   {req.requestStatus === "rejected" ? (
                     <button
@@ -162,10 +175,22 @@ const ManageRequests = () => {
             Adminrequests.map((req, i) => (
               <tr key={i}>
                 <th>{i + 1}</th>
-                <td>{req.userName}</td>
+                <td className="text-primary">{req.userName}</td>
                 <td>{req.userEmail}</td>
-                <td>{req.requestType}</td>
-                <td>{req.requestStatus}</td>
+                <td>
+                  {req.requestType === "admin" ? (
+                    <p className="text-green-500">ADMIN</p>
+                  ) : (
+                    <p className="text-red-500">CHEF</p>
+                  )}
+                </td>
+                <td>
+                  {req.requestStatus === "pending" ? (
+                    <p className="text-green-500">Pending</p>
+                  ) : (
+                    <p className="text-red-500">Rejected</p>
+                  )}
+                </td>
                 <td className="flex flex-col gap-1">
                   {req.requestStatus === "rejected" ? (
                     <button
@@ -173,7 +198,7 @@ const ManageRequests = () => {
                       onClick={() =>
                         updateAdminRoleRequest(req.userEmail, req.requestStatus)
                       }
-                      className="btn btn-xs border border-primary"
+                      className="btn btn-xs border border-primary "
                     >
                       Make Admin
                     </button>
@@ -182,7 +207,7 @@ const ManageRequests = () => {
                       onClick={() =>
                         updateAdminRoleRequest(req.userEmail, req.requestStatus)
                       }
-                      className="btn btn-xs border border-primary"
+                      className="btn btn-xs border border-primary text-white bg-green-500"
                     >
                       Make Admin
                     </button>
@@ -198,7 +223,7 @@ const ManageRequests = () => {
                   ) : (
                     <button
                       onClick={() => handleAdminReject(req.userEmail)}
-                      className="btn btn-xs border border-primary"
+                      className="btn btn-xs border border-primary text-white bg-red-500"
                     >
                       Reject
                     </button>

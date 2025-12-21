@@ -33,7 +33,7 @@ const DashboardLayout = () => {
           </div>
 
           <div className="navbar-center">
-            <button className="text-xl font-semibold tracking-wide">
+            <button className="text-xl font-semi-bold tracking-wide bg-gradient-to-r from-primary to-secondary px-4 py-2 rounded-lg text-white     ">
               Dashboard
             </button>
           </div>
@@ -59,7 +59,7 @@ const DashboardLayout = () => {
             </div>
             <Link
               to="/dashboard/my-profile"
-              className="font-semibold text-base hover:text-primary transition"
+              className="font-semibold text-base hover:text-primary transition border-b border-gray-200 text-md p-2  shadow-md hover:bg-gray-100 rounded-lg -ml-3"
             >
               My Profile
             </Link>

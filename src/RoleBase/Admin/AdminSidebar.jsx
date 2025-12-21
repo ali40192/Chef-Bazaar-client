@@ -17,7 +17,7 @@ const AdminSidebar = () => {
             className={({ isActive }) =>
               isActive
                 ? "font-bold text-md bg-primary text-white rounded-md p-2"
-                : ""
+                : "border-b border-gray-200 text-md p-2  shadow-md hover:bg-gray-100 hover:text-primary"
             }
           >
             <MdManageAccounts /> Manage Users
@@ -29,7 +29,7 @@ const AdminSidebar = () => {
             className={({ isActive }) =>
               isActive
                 ? "font-bold text-md bg-primary text-white rounded-md p-2"
-                : ""
+                : "border-b border-gray-200 text-md p-2  shadow-md hover:bg-gray-100 hover:text-primary"
             }
           >
             <RiAdminFill /> Manage Requests
@@ -41,7 +41,7 @@ const AdminSidebar = () => {
             className={({ isActive }) =>
               isActive
                 ? "font-bold text-md bg-primary text-white rounded-md p-2"
-                : ""
+                : "border-b border-gray-200 text-md p-2  shadow-md hover:bg-gray-100 hover:text-primary"
             }
           >
             <GiNetworkBars /> Platform Statistics

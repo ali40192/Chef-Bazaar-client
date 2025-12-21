@@ -88,7 +88,10 @@ const Login = () => {
         <div class="px-8 py-4 bg-secondary dark:bg-zinc-800">
           <div class="text-sm text-blue-900 dark:text-blue-300 text-center">
             Don't have an account?
-            <Link class="font-medium underline" to="/auth/register">
+            <Link
+              class="font-medium underline cursor-pointer"
+              to="/auth/register"
+            >
               Sign up
             </Link>
           </div>

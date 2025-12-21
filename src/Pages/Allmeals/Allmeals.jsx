@@ -26,11 +26,7 @@ const Allmeals = () => {
   if (isLoading) return <Loader />;
 
   if (error) {
-    return (
-      <div className="alert alert-error">
-        Error loading meals: {error.message}
-      </div>
-    );
+    return <Error></Error>;
   }
 
   const { meals = [], totalPages } = data || {};

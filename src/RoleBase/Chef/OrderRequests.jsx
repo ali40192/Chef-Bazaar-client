@@ -1,16 +1,29 @@
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 import Loader from "../../Components/Common/Loader";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import useChefid from "../../hooks/useChefid";
 
 const OrderRequests = () => {
   const [chefId, isChefLoading] = useChefid();
+  console.log(typeof chefId);
 
   const axiosSecure = useAxiosSecure();
 
-  const { data: OrderRequests = [] } = useQuery({
+  const { mutateAsync } = useMutation({
+    mutationFn: async ({ id, status }) => {
+      const res = await axiosSecure.patch(`/update-order-status/${id}`, {
+        status,
+      });
+      return res.data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message);
+    },
+  });
+
+  const { data: OrderRequests = [], refetch } = useQuery({
     queryKey: ["my-meal-order", chefId],
     queryFn: async () => {
       const res = await axiosSecure(`/my-meal-order/${chefId}`);
@@ -20,11 +33,9 @@ const OrderRequests = () => {
 
   const handleAccept = async (id) => {
     try {
-      const res = await axiosSecure.patch(`/update-order-status/${id}`, {
-        status: "accepted",
-      });
-      toast.success("order accepted successfully", res.data);
-      window.location.reload();
+      const res = await mutateAsync({ id, status: "accepted" });
+      toast.success("Accepted order successfully", res.message);
+      refetch();
     } catch (error) {
       toast.error("Error accepting order:", error);
     }
@@ -32,24 +43,20 @@ const OrderRequests = () => {
 
   const handleCanceled = async (id) => {
     try {
-      const res = await axiosSecure.patch(`/update-order-status/${id}`, {
-        status: "cancelled",
-      });
-      toast.success("order cancelled", res.data);
-      window.location.reload();
+      const res = await mutateAsync({ id, status: "cancelled" });
+      toast.success("Accepted order successfully", res.message);
+      refetch();
     } catch (error) {
-      console.error("Error accepting order:", error);
+      toast.error("Error cencelled order:", error);
     }
   };
   const handleDeliver = async (id) => {
     try {
-      const res = await axiosSecure.patch(`/update-order-status/${id}`, {
-        status: "delivered",
-      });
-      toast.success("Order Delivered", res.data);
-      window.location.reload();
+      const res = await mutateAsync({ id, status: "delivered" });
+      toast.success("order delivered successfully", res.message);
+      refetch();
     } catch (error) {
-      console.error("Error accepting order:", error);
+      toast.error("Error delivered order:", error);
     }
   };
 
@@ -80,16 +87,48 @@ const OrderRequests = () => {
             return (
               <tr key={order._id}>
                 <th>{index + 1}</th>
-                <th>{order.mealName}</th>
+                <th className="text-md font-bold text-primary">
+                  {order.mealName}
+                </th>
                 <th>{order.price}</th>
                 <th>{order.quantity}</th>
-                <th>{order.orderStatus}</th>
+                <th>
+                  {" "}
+                  {order.orderStatus === "Pending" ? (
+                    <p className="text-red-500 border-red-500 border-2 rounded-lg p-2 text-center">
+                      Pending
+                    </p>
+                  ) : order.orderStatus === "accepted" ? (
+                    <p className="text-green-500 border-green-500 border-2 rounded-lg p-2 text-center">
+                      Accepted
+                    </p>
+                  ) : order.orderStatus === "delivered" ? (
+                    <p className="text-blue-500 border-blue-500 border-2 rounded-lg p-2 text-center">
+                      Delivered
+                    </p>
+                  ) : (
+                    <p className="text-red-500 border-red-500 border-2 rounded-lg p-2 text-center">
+                      Cancelled
+                    </p>
+                  )}
+                </th>
                 <th>{order.userEmail}</th>
                 <th>{order.orderTime}</th>
                 <th>
-                  {order.UserAddress.district},{order.UserAddress.region}
+                  {order.UserAddress.district || "N/A"},
+                  {order.UserAddress.region || "N/A"}
                 </th>
-                <th>{order.paymentStatus}</th>
+                <th>
+                  {order.paymentStatus === "paid" ? (
+                    <p className="text-green-500 border-green-500 border rounded-lg p-1 text-center">
+                      Paid
+                    </p>
+                  ) : (
+                    <p className="text-blue-500 border-blue-500 border rounded-lg p-1 text-center">
+                      Unpaid
+                    </p>
+                  )}
+                </th>
 
                 {order.orderStatus === "Pending" && (
                   <th>
