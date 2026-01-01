@@ -1,4 +1,4 @@
-# 🌐 Project Name
+# 🌐 LocalChefBaazer
 
 A modern **full-stack web application** built using the **MERN stack**.  
 This project focuses on performance, clean UI, and scalable architecture.
