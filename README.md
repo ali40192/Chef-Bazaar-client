@@ -76,4 +76,4 @@ This project focuses on performance, clean UI, and scalable architecture.
 
 ### 1️⃣ Clone the Repository
 ```bash
-git clone https://github.com/yourusername/project-name.git
+git clone https://github.com/ali40192/Chef-Bazaar-client.git
