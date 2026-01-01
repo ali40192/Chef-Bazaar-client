@@ -15,9 +15,9 @@ This project focuses on performance, clean UI, and scalable architecture.
 
 ## 📸 Screenshot
 
-> Add a clean screenshot of the project UI
 
-![Project Screenshot](./screenshot.png)
+
+![Project Screenshot](Screenshot_11.png)
 
 ---
 
