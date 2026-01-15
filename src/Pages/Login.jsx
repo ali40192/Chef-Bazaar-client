@@ -132,9 +132,9 @@ const Login = () => {
             <div className="mt-10">
               <button
                 type="submit"
-                className="w-full px-4 py-3 text-white font-semibold bg-gradient-to-r from-primary to-secondary rounded-lg"
+                className="w-full px-4 py-3 text-white font-semibold bg-gradient-to-r from-primary to-secondary rounded-lg cursor-pointer"
               >
-                Let’s Go
+                Let's Go
               </button>
             </div>
           </div>

@@ -1,5 +1,79 @@
-This is my website Named Local Chef Bazaar, which is built using React and tailwind and daisy ui. It is a single-page application that allows users to view and interact with a collection of images.
+# 🌐 LocalChefBaazer
 
-The website is designed to be responsive and user-friendly, with a clean and modern interface. It uses React components to create a modular and reusable codebase, and react router to handle server-side rendering and routing.
+A modern **full-stack web application** built using the **MERN stack**.  
+This project focuses on performance, clean UI, and scalable architecture.
 
-I use React hook form manage all form and use tanstack quary and axios for fatchaing data from server.
+---
+
+## 🚀 Live Demo
+
+🔗 Live Website:https://monumental-kulfi-06acab.netlify.app
+🔗 Client Repository:https://github.com/ali40192/Chef-Bazaar -client.git
+🔗 Server Repository: https://github.com/ali40192/Chef-Bazaar -server.git
+
+---
+
+## 📸 Screenshot
+
+
+
+![Project Screenshot](Screenshot_11.png)
+
+---
+
+## 🛠️ Technologies Used
+
+### Frontend
+- React.js / Next.js  
+- Tailwind CSS  
+- DaisyUI  
+- Axios  
+- React Router  
+
+### Backend
+- Node.js  
+- Express.js  
+- MongoDB  
+- JWT Authentication  
+
+### Tools
+- GitHub  
+- Firebase 
+- Vercel / Netlify  
+
+---
+
+## ✨ Core Features
+
+- 🔐 User authentication (Login / Register)
+- 🧑 Role-based access control (Admin / User)
+- 📦 CRUD operations
+- 🔄 Real-time data update
+- 📱 Fully responsive design
+- ⚡ Optimized performance & clean UI
+
+---
+
+## 📦 Dependencies Used
+
+### Frontend
+- react
+- react-router-dom
+- axios
+- tailwindcss
+- daisyui
+
+### Backend
+- express
+- mongodb
+- cors
+- jsonwebtoken
+- dotenv
+
+---
+
+## ⚙️ How to Run the Project Locally
+
+### 1️⃣ Clone the Repository
+```bash
+git clone https://github.com/ali40192/Chef-Bazaar-client.git
