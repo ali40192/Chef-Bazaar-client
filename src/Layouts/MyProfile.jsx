@@ -9,10 +9,9 @@ import { toast } from "react-toastify";
 
 const MyProfile = () => {
   const { user } = useAuth();
-  console.log(user.accessToken);
   const axiosSecure = useAxiosSecure();
-
   const [role, isRoleloading] = useRole();
+
   const { data: userDetails } = useQuery({
     queryKey: ["userDetails", user?.email],
     queryFn: async () => {
@@ -22,61 +21,38 @@ const MyProfile = () => {
     enabled: !!user?.email,
   });
 
-  ////////confirm become a seller
   const handleConfirm = () => {
     Swal.fire({
       title: "Are you sure to become a chef?",
-
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
       confirmButtonText: "Yes, I Want!",
     }).then((result) => {
       if (result.isConfirmed) {
         axiosSecure
           .post("/become-chef", { userDetails })
-          .then((res) => {
-            toast.success("Your request send to admin", res);
-          })
-          .catch((err) => {
-            toast.error(err.message);
-          });
+          .then(() => toast.success("Your request send to admin"))
+          .catch((err) => toast.error(err.message));
 
-        Swal.fire({
-          title: "Confirmed!",
-          text: "Your file Send To Admin.",
-          icon: "success",
-        });
+        Swal.fire("Confirmed!", "Your file Send To Admin.", "success");
       }
     });
   };
 
-  ////become an Admin
-  const adminConfirm = async () => {
+  const adminConfirm = () => {
     Swal.fire({
       title: "Are you sure to become an Admin?",
-
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
       confirmButtonText: "Yes, I Want!",
     }).then((result) => {
       if (result.isConfirmed) {
-        try {
-          axiosSecure.post("/become-admin", { userDetails }).then((res) => {
-            toast.success("Your request send to admin", res);
-          });
-        } catch (error) {
-          toast.error(error.message);
-        }
+        axiosSecure
+          .post("/become-admin", { userDetails })
+          .then(() => toast.success("Your request send to admin"))
+          .catch((err) => toast.error(err.message));
 
-        Swal.fire({
-          title: "Confirmed!",
-          text: "Your file Send To Admin.",
-          icon: "success",
-        });
+        Swal.fire("Confirmed!", "Your file Send To Admin.", "success");
       }
     });
   };
@@ -89,21 +65,19 @@ const MyProfile = () => {
       userDetails?.district && userDetails?.region
         ? `${userDetails.district}, ${userDetails.region}`
         : "Dhaka, Bangladesh",
-    role: role,
+    role,
     status: userDetails?.status,
     chefId: userDetails?.chefId,
   };
 
-  if (isRoleloading) {
-    return <Loader></Loader>;
-  }
+  if (isRoleloading) return <Loader />;
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <div className="bg-base-100 shadow-xl rounded-2xl p-6 sm:p-8">
+    <div className="max-w-4xl mx-auto px-4">
+      <div className="bg-base-100 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-center gap-6 border-b pb-6">
-          <div className="w-24 h-24 rounded-full overflow-hidden ring ring-primary ring-offset-base-100 ring-offset-2">
+        <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-8 flex flex-col sm:flex-row items-center gap-6">
+          <div className="w-28 h-28 rounded-full ring ring-primary ring-offset-4 ring-offset-base-100 overflow-hidden">
             <img
               src={profile.image}
               alt="User"
@@ -112,68 +86,71 @@ const MyProfile = () => {
           </div>
 
           <div className="text-center sm:text-left">
-            <h2 className="text-2xl font-bold">{profile.name}</h2>
-            <p className="text-sm text-gray-500">{profile.email}</p>
+            <h2 className="text-3xl font-bold">{profile.name}</h2>
+            <p className="text-sm opacity-70">{profile.email}</p>
+
+            <div className="mt-3 flex justify-center sm:justify-start gap-2">
+              <span className="badge badge-outline badge-primary px-4 py-3">
+                {profile.role}
+              </span>
+              <span
+                className={`badge px-4 py-3 ${
+                  profile.status === "active" ? "badge-success" : "badge-error"
+                }`}
+              >
+                {profile.status}
+              </span>
+            </div>
           </div>
         </div>
 
         {/* Info Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-6">
-          {/* Address */}
-          <div>
-            <p className="text-sm text-gray-500 mb-1">Address</p>
-            <p className="font-semibold">{profile.address}</p>
+        <div className="p-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="space-y-1">
+            <p className="text-xs uppercase tracking-wide text-gray-500">
+              Address
+            </p>
+            <p className="font-semibold text-lg">{profile.address}</p>
           </div>
 
-          {/* Role */}
-          <div>
-            <p className="text-sm text-gray-500 mb-1">Role</p>
-            <span className="badge badge-info px-4 py-3">{profile.role}</span>
-          </div>
-
-          {/* Status */}
-          <div className="mb-2">
-            <p className="text-sm text-gray-500 mb-1">Status</p>
-            <span
-              className={`badge px-4 py-3 ${
-                profile.status === "active" ? "badge-success" : "badge-error"
-              }`}
-            >
-              {profile.status}
-            </span>
-          </div>
-
-          {/* Chef ID  */}
           {role === "chef" && (
-            <div>
-              <p className="text-sm text-gray-500 mb-1">Chef ID</p>
-              <p className="font-semibold">{profile.chefId}</p>
+            <div className="space-y-1">
+              <p className="text-xs uppercase tracking-wide text-gray-500">
+                Chef ID
+              </p>
+              <p className="font-semibold text-lg">{profile.chefId}</p>
             </div>
           )}
         </div>
 
-        {/* Action Buttons */}
-        {role === "user" && (
-          <div className="flex flex-col sm:flex-row gap-4 mt-8">
-            <button onClick={handleConfirm} className="btn btn-primary flex-1">
-              Be a Chef
-            </button>
+        {/* Actions */}
+        <div className="p-8 pt-0">
+          {role === "user" && (
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button
+                onClick={handleConfirm}
+                className="btn btn-primary flex-1 rounded-xl"
+              >
+                Become a Chef
+              </button>
+              <button
+                onClick={adminConfirm}
+                className="btn btn-outline btn-secondary flex-1 rounded-xl"
+              >
+                Become an Admin
+              </button>
+            </div>
+          )}
+
+          {role === "chef" && (
             <button
               onClick={adminConfirm}
-              className="btn btn-outline btn-secondary flex-1"
+              className="btn btn-outline btn-secondary w-full rounded-xl"
             >
-              Be an Admin
+              Become an Admin
             </button>
-          </div>
-        )}
-        {role === "chef" && (
-          <button
-            onClick={adminConfirm}
-            className="btn btn-outline btn-secondary w-full"
-          >
-            Be an Admin
-          </button>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

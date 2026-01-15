@@ -9,92 +9,145 @@ const Login = () => {
   const { loginUser } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
-
+    setValue, // for demo auto-fill
     formState: { errors },
   } = useForm();
 
   const handleLogin = async (data) => {
     const { email, password } = data;
-    const result = await loginUser(email, password)
-      .then((result) => {
-        toast.success("login successfull", result.user);
-        saveOrUpdateUser({
-          name: result.user?.displayName,
-          email: result.user?.email,
-          imageUrl: result.user?.photoURL,
-        });
-        navigate(location.state || "/");
-      })
-      .catch((error) => {
-        console.log(error);
+
+    try {
+      const result = await loginUser(email, password);
+      toast.success("Login successful");
+      saveOrUpdateUser({
+        name: result.user?.displayName,
+        email: result.user?.email,
+        imageUrl: result.user?.photoURL,
       });
-    return result;
+      navigate(location.state || "/");
+    } catch (error) {
+      toast.error("Invalid email or password");
+      console.error(error);
+    }
   };
+
+  //  Demo Admin
+  const handleDemoAdmin = () => {
+    setValue("email", "mohammadali40192@gmail.com");
+    setValue("password", "#@mohammadali#@");
+  };
+
+  //  Demo Chef
+  const handleDemoChef = () => {
+    setValue("email", "pedri@gmail.com");
+    setValue("password", "pedri08");
+  };
+
   return (
     <div className="w-full max-w-2xl mx-auto">
       <form
         onSubmit={handleSubmit(handleLogin)}
-        class="bg-white dark:bg-zinc-900 shadow-2xl rounded-2xl overflow-hidden border-4 border-primary dark:border-blue-800"
+        className="bg-white dark:bg-zinc-900 shadow-2xl rounded-2xl overflow-hidden border-4 border-primary"
       >
-        <div class="px-8 py-10 md:px-10">
-          <h2 class="text-4xl font-extrabold text-center text-zinc-800 dark:text-white">
+        <div className="px-8 py-10 md:px-10">
+          <h2 className="text-4xl font-extrabold text-center text-zinc-800 dark:text-white">
             Welcome Back!
           </h2>
-          <p class="text-center text-zinc-600 dark:text-zinc-400 mt-3">
+          <p className="text-center text-zinc-600 dark:text-zinc-400 mt-3">
             We missed you, sign in to continue.
           </p>
-          <div class="mt-10">
-            <div class="relative">
-              <label
-                class="block mb-3 text-sm font-medium text-zinc-600 dark:text-zinc-200"
-                for="email"
+
+          {/*  Demo Credentials */}
+          <div className="mt-6 bg-base-200 p-4 rounded-lg text-sm space-y-3">
+            <p className="font-semibold text-primary">Demo Accounts:</p>
+
+            {/* Admin */}
+            <div className="flex flex-col md:flex-row items-center justify-between gap-2">
+              <div>
+                <p className="text-sm">
+                  Admin:{" "}
+                  <span className="font-mono">mohammadali40192@gmail.com</span>
+                </p>
+                <p className="text-sm">
+                  Password: <span className="font-mono">#@mohammadali#@</span>
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleDemoAdmin}
+                className="btn btn-sm btn-outline btn-primary"
               >
-                Email
-              </label>
+                Use Admin
+              </button>
+            </div>
+
+            {/* Chef */}
+            <div className="flex flex-col md:flex-row items-center justify-between gap-2">
+              <div>
+                <p className="text-sm">
+                  Chef: <span className="font-mono">pedri@gmail.com</span>
+                </p>
+                <p className="text-sm">
+                  Password: <span className="font-mono">pedri08</span>
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleDemoChef}
+                className="btn btn-sm btn-outline btn-secondary"
+              >
+                Use Chef
+              </button>
+            </div>
+          </div>
+
+          <div className="mt-10">
+            {/* Email */}
+            <div>
+              <label className="block mb-3 text-sm font-medium">Email</label>
               <input
-                {...register("email")}
+                {...register("email", { required: true })}
                 placeholder="you@example.com"
-                class="block w-full px-4 py-3 mt-2 text-zinc-800 bg-white border-2 rounded-lg dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-opacity-50 focus:outline-none focus:ring focus:ring-blue-400"
+                className="block w-full px-4 py-3 border-2 rounded-lg bg-white dark:bg-zinc-800"
                 type="email"
               />
             </div>
-            <div class="mt-6">
-              <label
-                class="block mb-3 text-sm font-medium text-zinc-600 dark:text-zinc-200"
-                for="password"
-              >
-                Password
-              </label>
+
+            {/* Password */}
+            <div className="mt-6">
+              <label className="block mb-3 text-sm font-medium">Password</label>
               <input
-                {...register("password")}
+                {...register("password", { required: true })}
                 placeholder="••••••••"
-                class="block w-full px-4 py-3 mt-2 text-zinc-800 bg-white border-2 rounded-lg dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-200 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-opacity-50 focus:outline-none focus:ring focus:ring-blue-400"
+                className="block w-full px-4 py-3 border-2 rounded-lg bg-white dark:bg-zinc-800"
                 type="password"
               />
             </div>
-            <div class="mt-10">
+
+            {/* Submit */}
+            <div className="mt-10">
               <button
-                class="w-full px-4 py-3 tracking-wide text-white transition-colors duration-200 transform bg-gradient-to-r from-primary to-secondary rounded-lg hover:from-primary hover:to-secondary focus:outline-none focus:ring-4 focus:ring-blue-400 dark:focus:ring-blue-800"
                 type="submit"
+                className="w-full px-4 py-3 text-white font-semibold bg-gradient-to-r from-primary to-secondary rounded-lg"
               >
-                Let's Go
+                Let’s Go
               </button>
             </div>
           </div>
         </div>
-        <div class="px-8 py-4 bg-secondary dark:bg-zinc-800">
-          <div class="text-sm text-blue-900 dark:text-blue-300 text-center">
-            Don't have an account?
-            <Link
-              class="font-medium underline cursor-pointer"
-              to="/auth/register"
-            >
+
+        {/* Footer */}
+        <div className="px-8 py-4 bg-secondary text-center">
+          <span className="text-sm text-white">
+            Don't have an account?{" "}
+            <Link className="underline font-medium" to="/auth/register">
               Sign up
             </Link>
-          </div>
+          </span>
         </div>
       </form>
     </div>

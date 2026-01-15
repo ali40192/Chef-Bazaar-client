@@ -1,5 +1,4 @@
 import useAxiosSecure from "../../hooks/useAxiosSecure";
-
 import Loader from "../../Components/Common/Loader";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
@@ -7,8 +6,6 @@ import useChefid from "../../hooks/useChefid";
 
 const OrderRequests = () => {
   const [chefId, isChefLoading] = useChefid();
-  console.log(typeof chefId);
-
   const axiosSecure = useAxiosSecure();
 
   const { mutateAsync } = useMutation({
@@ -32,208 +29,142 @@ const OrderRequests = () => {
   });
 
   const handleAccept = async (id) => {
-    try {
-      const res = await mutateAsync({ id, status: "accepted" });
-      toast.success("Accepted order successfully", res.message);
-      refetch();
-    } catch (error) {
-      toast.error("Error accepting order:", error);
-    }
+    await mutateAsync({ id, status: "accepted" });
+    refetch();
   };
 
   const handleCanceled = async (id) => {
-    try {
-      const res = await mutateAsync({ id, status: "cancelled" });
-      toast.success("Accepted order successfully", res.message);
-      refetch();
-    } catch (error) {
-      toast.error("Error cencelled order:", error);
-    }
+    await mutateAsync({ id, status: "cancelled" });
+    refetch();
   };
+
   const handleDeliver = async (id) => {
-    try {
-      const res = await mutateAsync({ id, status: "delivered" });
-      toast.success("order delivered successfully", res.message);
-      refetch();
-    } catch (error) {
-      toast.error("Error delivered order:", error);
-    }
+    await mutateAsync({ id, status: "delivered" });
+    refetch();
   };
 
   if (isChefLoading) return <Loader />;
 
   return (
-    <div className="overflow-x-auto">
-      <table className="table">
-        {/* head */}
-        <thead>
-          <tr>
-            <th></th>
-            <th>Food Name</th>
-            <th>Price </th>
-            <th>Quantity</th>
-            <th>Order Status</th>
-            <th>User Email</th>
-            <th>Order Time</th>
-            <th> User Adress</th>
-            <th>Payment Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* row 1 */}
+    <div className="p-4 md:p-6">
+      <div className="bg-base-100 rounded-2xl shadow-lg border border-base-300 overflow-hidden">
+        {/* Header */}
+        <div className="p-5 border-b">
+          <h2 className="text-2xl font-bold text-primary">Order Requests</h2>
+          <p className="text-sm text-gray-500">
+            Manage incoming orders from customers
+          </p>
+        </div>
 
-          {OrderRequests.map((order, index) => {
-            return (
-              <tr key={order._id}>
-                <th>{index + 1}</th>
-                <th className="text-md font-bold text-primary">
-                  {order.mealName}
-                </th>
-                <th>{order.price}</th>
-                <th>{order.quantity}</th>
-                <th>
-                  {" "}
-                  {order.orderStatus === "Pending" ? (
-                    <p className="text-red-500 border-red-500 border-2 rounded-lg p-2 text-center">
-                      Pending
-                    </p>
-                  ) : order.orderStatus === "accepted" ? (
-                    <p className="text-green-500 border-green-500 border-2 rounded-lg p-2 text-center">
-                      Accepted
-                    </p>
-                  ) : order.orderStatus === "delivered" ? (
-                    <p className="text-blue-500 border-blue-500 border-2 rounded-lg p-2 text-center">
-                      Delivered
-                    </p>
-                  ) : (
-                    <p className="text-red-500 border-red-500 border-2 rounded-lg p-2 text-center">
-                      Cancelled
-                    </p>
-                  )}
-                </th>
-                <th>{order.userEmail}</th>
-                <th>{order.orderTime}</th>
-                <th>
-                  {order.UserAddress.district || "N/A"},
-                  {order.UserAddress.region || "N/A"}
-                </th>
-                <th>
-                  {order.paymentStatus === "paid" ? (
-                    <p className="text-green-500 border-green-500 border rounded-lg p-1 text-center">
-                      Paid
-                    </p>
-                  ) : (
-                    <p className="text-blue-500 border-blue-500 border rounded-lg p-1 text-center">
-                      Unpaid
-                    </p>
-                  )}
-                </th>
-
-                {order.orderStatus === "Pending" && (
-                  <th>
-                    <button
-                      onClick={() => handleAccept(order._id)}
-                      className="btn btn-xs border border-primary"
-                    >
-                      Accept
-                    </button>
-                    <button
-                      onClick={() => handleCanceled(order._id)}
-                      className="btn btn-xs border border-primary"
-                    >
-                      Cencel
-                    </button>
-                    <button
-                      onClick={() => handleDeliver(order._id)}
-                      className="btn btn-xs border border-primary"
-                    >
-                      Deliver
-                    </button>
-                  </th>
-                )}
-
-                {order.orderStatus === "accepted" && (
-                  <th>
-                    <button
-                      disabled="true"
-                      onClick={() => handleAccept(order._id)}
-                      className="btn btn-xs border border-primary"
-                    >
-                      Accept
-                    </button>
-                    <button
-                      disabled="true"
-                      onClick={() => handleCanceled(order._id)}
-                      className="btn btn-xs border border-primary"
-                    >
-                      Cencel
-                    </button>
-                    <button
-                      onClick={() => handleDeliver(order._id)}
-                      className="btn btn-xs border border-primary"
-                    >
-                      Deliver
-                    </button>
-                  </th>
-                )}
-                {order.orderStatus === "cancelled" && (
-                  <th>
-                    <button
-                      disabled="true"
-                      onClick={() => handleAccept(order._id)}
-                      className="btn btn-xs border border-primary"
-                    >
-                      Accept
-                    </button>
-                    <button
-                      disabled="true"
-                      onClick={() => handleCanceled(order._id)}
-                      className="btn btn-xs border border-primary"
-                    >
-                      Cencel
-                    </button>
-                    <button
-                      disabled="true"
-                      onClick={() => handleDeliver(order._id)}
-                      className="btn btn-xs border border-primary"
-                    >
-                      Deliver
-                    </button>
-                  </th>
-                )}
-
-                {order.orderStatus === "delivered" && (
-                  <th>
-                    <button
-                      disabled="true"
-                      onClick={() => handleAccept(order._id)}
-                      className="btn btn-xs border border-primary"
-                    >
-                      Accept
-                    </button>
-                    <button
-                      disabled="true"
-                      onClick={() => handleCanceled(order._id)}
-                      className="btn btn-xs border border-primary"
-                    >
-                      Cencel
-                    </button>
-                    <button
-                      disabled="true"
-                      onClick={() => handleDeliver(order._id)}
-                      className="btn btn-xs border border-primary"
-                    >
-                      Deliver
-                    </button>
-                  </th>
-                )}
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="table table-zebra w-full">
+            <thead className="bg-base-200 sticky top-0 z-10 text-gray-700">
+              <tr>
+                <th>#</th>
+                <th>Food</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Status</th>
+                <th>User Email</th>
+                <th>Order Time</th>
+                <th>Address</th>
+                <th>Payment</th>
+                <th>Action</th>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            </thead>
+
+            <tbody>
+              {OrderRequests.map((order, index) => (
+                <tr key={order._id} className="hover:bg-base-200">
+                  <td>{index + 1}</td>
+
+                  <td className="font-semibold text-primary">
+                    {order.mealName}
+                  </td>
+
+                  <td>৳ {order.price}</td>
+                  <td>{order.quantity}</td>
+
+                  {/* Order Status */}
+                  <td>
+                    <span
+                      className={`badge badge-outline px-3 py-2 font-semibold
+                        ${order.orderStatus === "Pending" && "badge-warning"}
+                        ${order.orderStatus === "accepted" && "badge-success"}
+                        ${order.orderStatus === "delivered" && "badge-info"}
+                        ${order.orderStatus === "cancelled" && "badge-error"}
+                      `}
+                    >
+                      {order.orderStatus}
+                    </span>
+                  </td>
+
+                  <td className="text-sm">{order.userEmail}</td>
+                  <td className="text-sm">{order.orderTime}</td>
+
+                  <td className="text-sm">
+                    {order.UserAddress.district || "N/A"},{" "}
+                    {order.UserAddress.region || "N/A"}
+                  </td>
+
+                  {/* Payment Status */}
+                  <td>
+                    <span
+                      className={`badge px-3 py-1 font-semibold
+                        ${
+                          order.paymentStatus === "paid"
+                            ? "badge-success"
+                            : "badge-outline badge-info"
+                        }
+                      `}
+                    >
+                      {order.paymentStatus}
+                    </span>
+                  </td>
+
+                  {/* Actions */}
+                  <td>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        disabled={order.orderStatus !== "Pending"}
+                        onClick={() => handleAccept(order._id)}
+                        className="btn btn-xs btn-outline btn-success"
+                      >
+                        Accept
+                      </button>
+
+                      <button
+                        disabled={order.orderStatus !== "Pending"}
+                        onClick={() => handleCanceled(order._id)}
+                        className="btn btn-xs btn-outline btn-error"
+                      >
+                        Cancel
+                      </button>
+
+                      <button
+                        disabled={order.orderStatus !== "accepted"}
+                        onClick={() => handleDeliver(order._id)}
+                        className="btn btn-xs btn-outline btn-info"
+                      >
+                        Deliver
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {OrderRequests.length === 0 && (
+            <div className="text-center py-10 text-gray-500">
+              No order requests found 📦
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
+
 export default OrderRequests;

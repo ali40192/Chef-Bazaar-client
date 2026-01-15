@@ -40,9 +40,14 @@ const Allmeals = () => {
 
   return (
     <div className="w-full max-w-6xl mx-auto mt-5 px-4">
-      <h2 className="text-2xl font-bold mb-4 text-center text-primary">
-        All Meals Here
-      </h2>
+      <div className="text-center mb-10">
+        <h2 className="text-3xl md:text-4xl font-extrabold text-primary">
+          Explore All Meals
+        </h2>
+        <p className="text-gray-500 mt-2">
+          Browse our delicious meals and find your favorite
+        </p>
+      </div>
 
       <div className="flex justify-end mb-6">
         <select

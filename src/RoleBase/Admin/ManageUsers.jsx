@@ -1,5 +1,4 @@
 import React from "react";
-
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../Components/Common/Loader";
@@ -30,72 +29,76 @@ const ManageUsers = () => {
     }
   };
 
-  if (isLoading) return <Loader></Loader>;
+  if (isLoading) return <Loader />;
+
   return (
-    <div className="overflow-x-auto">
-      <table className="table">
-        {/* head */}
-        <thead>
-          <tr>
-            <th></th>
+    <div className="bg-base-100 rounded-2xl shadow-lg p-6 overflow-x-auto">
+      <h2 className="text-2xl font-bold mb-6 text-primary">Manage Users</h2>
+
+      <table className="table table-zebra w-full">
+        {/* Head */}
+        <thead className="bg-base-200 sticky top-0 z-10">
+          <tr className="text-sm uppercase tracking-wide text-gray-600">
+            <th>#</th>
             <th>Name</th>
             <th>Email</th>
-            <th>User Status</th>
-            <th>User Role</th>
-
-            <th>Action</th>
+            <th>Status</th>
+            <th>Role</th>
+            <th className="text-center">Action</th>
           </tr>
         </thead>
-        <tbody>
-          {/* row 1 */}
 
-          {users?.map(
-            (user, index) => (
-              console.log("is user", user),
-              (
-                <tr key={index}>
-                  <th>{index + 1}</th>
-                  <td className="font-bold text-md text-primary">
-                    {user.name}
-                  </td>
-                  <td>{user.email}</td>
-                  <td>
-                    {user.status === "active" ? (
-                      <p className="text-green-500 font-bold">Active</p>
-                    ) : (
-                      <p className="text-red-500 font-bold">Fraud</p>
-                    )}
-                  </td>
-                  <td>
-                    {" "}
-                    {user.role === "chef" ? (
-                      <p className="text-green-500 font-bold">CHEF</p>
-                    ) : (
-                      <p className="text-red-500 font-bold">USER</p>
-                    )}
-                  </td>
-                  <td>
-                    {user.status === "fraud" ? (
-                      <button
-                        disabled="true"
-                        onClick={() => handleFraude(user.email)}
-                        className="btn btn-xs  btn-active"
-                      >
-                        Make Fraud
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => handleFraude(user.email)}
-                        className="btn btn-xs  btn-active text-white bg-red-600"
-                      >
-                        Make Fraud
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              )
-            )
-          )}
+        <tbody>
+          {users?.map((user, index) => (
+            <tr key={index} className="hover:bg-base-200/50 transition-colors">
+              <th>{index + 1}</th>
+
+              <td className="font-semibold text-primary">{user.name}</td>
+
+              <td className="text-sm text-gray-600">{user.email}</td>
+
+              {/* Status */}
+              <td>
+                <span
+                  className={`badge badge-outline px-4 py-2 font-semibold ${
+                    user.status === "active" ? "badge-success" : "badge-error"
+                  }`}
+                >
+                  {user.status}
+                </span>
+              </td>
+
+              {/* Role */}
+              <td>
+                <span
+                  className={`badge px-4 py-2 font-bold ${
+                    user.role === "chef" ? "badge-info" : "badge-neutral"
+                  }`}
+                >
+                  {user.role.toUpperCase()}
+                </span>
+              </td>
+
+              {/* Action */}
+              <td className="text-center">
+                {user.status === "fraud" ? (
+                  <button
+                    disabled
+                    className="btn btn-xs btn-disabled opacity-60"
+                  >
+                    Make Fraud
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handleFraude(user.email)}
+                    className="btn btn-xs bg-red-600 hover:bg-red-700 text-white rounded-lg"
+                  >
+                    Make Fraud
+                  </button>
+                )}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

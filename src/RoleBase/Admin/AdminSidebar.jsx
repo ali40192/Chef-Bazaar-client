@@ -1,50 +1,57 @@
 import React from "react";
-import { Link, NavLink } from "react-router";
+import { NavLink } from "react-router";
 import { MdManageAccounts } from "react-icons/md";
 import { RiAdminFill } from "react-icons/ri";
 import { GiNetworkBars } from "react-icons/gi";
 
 const AdminSidebar = () => {
+  const baseClass =
+    "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200";
+
+  const inactiveClass = "text-gray-600 hover:bg-primary/10 hover:text-primary";
+
+  const activeClass = "bg-primary text-white font-semibold shadow-md";
+
   return (
-    <div>
-      <h4 className="text-xs font-semibold text-gray-400 mb-2 uppercase">
+    <div className="bg-white rounded-2xl p-4 shadow-sm">
+      <h4 className="text-xs font-semibold text-gray-400 mb-4 uppercase tracking-wider">
         Admin Dashboard
       </h4>
-      <ul className="menu space-y-1">
+
+      <ul className="space-y-2">
         <li>
           <NavLink
             to="/dashboard/manage-users"
             className={({ isActive }) =>
-              isActive
-                ? "font-bold text-md bg-primary text-white rounded-md p-2"
-                : "border-b border-gray-200 text-md p-2  shadow-md hover:bg-gray-100 hover:text-primary"
+              `${baseClass} ${isActive ? activeClass : inactiveClass}`
             }
           >
-            <MdManageAccounts /> Manage Users
+            <MdManageAccounts size={22} />
+            <span>Manage Users</span>
           </NavLink>
         </li>
+
         <li>
           <NavLink
             to="/dashboard/manage-requests"
             className={({ isActive }) =>
-              isActive
-                ? "font-bold text-md bg-primary text-white rounded-md p-2"
-                : "border-b border-gray-200 text-md p-2  shadow-md hover:bg-gray-100 hover:text-primary"
+              `${baseClass} ${isActive ? activeClass : inactiveClass}`
             }
           >
-            <RiAdminFill /> Manage Requests
+            <RiAdminFill size={22} />
+            <span>Manage Requests</span>
           </NavLink>
         </li>
+
         <li>
           <NavLink
             to="/dashboard/platform-statistics"
             className={({ isActive }) =>
-              isActive
-                ? "font-bold text-md bg-primary text-white rounded-md p-2"
-                : "border-b border-gray-200 text-md p-2  shadow-md hover:bg-gray-100 hover:text-primary"
+              `${baseClass} ${isActive ? activeClass : inactiveClass}`
             }
           >
-            <GiNetworkBars /> Platform Statistics
+            <GiNetworkBars size={22} />
+            <span>Platform Statistics</span>
           </NavLink>
         </li>
       </ul>

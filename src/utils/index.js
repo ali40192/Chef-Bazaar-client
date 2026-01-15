@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// image to url
 export const uploadeImg = async (imageFile) => {
   const formData = new FormData();
   formData.append("image", imageFile);
@@ -10,7 +11,7 @@ export const uploadeImg = async (imageFile) => {
   return imgdata.data.data.display_url;
 };
 
-////save or update user info to database
+////save or update user information  to database
 export const saveOrUpdateUser = async (user) => {
   const res = await axios.post(`${import.meta.env.VITE_API_URL}/users`, user);
   return res.data;

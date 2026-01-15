@@ -19,11 +19,10 @@ const MyMeals = () => {
     queryKey: ["mymeals", user?.email],
     queryFn: async () => {
       const res = await axiosSecure(`/mymeals`);
-
       return res.data;
     },
   });
-  ///////delete related kaj
+
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -43,78 +42,90 @@ const MyMeals = () => {
           toast.error(error.message);
         }
 
-        Swal.fire({
-          title: "Deleted!",
-          text: "Your file has been deleted.",
-          icon: "success",
-        });
+        Swal.fire("Deleted!", "Your meal has been deleted.", "success");
       }
     });
   };
 
-  if (isLoading) return <Loader></Loader>;
+  if (isLoading) return <Loader />;
 
   return (
-    <div className="overflow-x-auto">
-      <table className="table">
-        {/* head */}
-        <thead>
-          <tr>
-            <th></th>
-            <th>Food Name</th>
-            <th>Price</th>
-            <th>Rating</th>
-            <th>Ingredients</th>
-            <th>Estimated D.Time</th>
-            <th>Chef Name</th>
-            <th>Chef Id</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* row 1 */}
-          {MyMeals?.map((meals, i) => (
-            <tr key={i}>
-              <td>
-                <div className="flex items-center gap-3">
-                  <div className="avatar">
-                    <div className="mask mask-squircle h-12 w-12">
+    <div className="p-4 md:p-6">
+      <div className="bg-base-100 rounded-2xl shadow-lg border border-base-300 overflow-hidden">
+        <div className="p-5 border-b">
+          <h2 className="text-2xl font-bold text-primary">My Meals</h2>
+          <p className="text-sm text-gray-500">
+            Manage your added meals from here
+          </p>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="table table-zebra w-full">
+            <thead className="bg-base-200 text-gray-700 sticky top-0 z-10">
+              <tr>
+                <th>Image</th>
+                <th>Food Name</th>
+                <th>Price</th>
+                <th>Rating</th>
+                <th>Ingredients</th>
+                <th>Delivery Time</th>
+                <th>Chef Name</th>
+                <th>Chef ID</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {MyMeals.map((meals, i) => (
+                <tr key={i} className="hover:bg-base-200 transition-colors">
+                  <td>
+                    <div className="flex justify-center">
                       <img
                         src={meals.foodImage}
-                        alt="Avatar Tailwind CSS Component"
+                        alt="meal"
+                        className="h-12 w-12 rounded-xl object-cover border"
                       />
                     </div>
-                  </div>
-                </div>
-              </td>
-              <td>{meals?.foodName}</td>
-              <td>{meals?.price}</td>
-              <td>{meals?.rating}</td>
-              <td>{meals?.ingredients}</td>
-              <td>{meals?.estimatedDeliveryTime}</td>
-              <td>{meals?.chefName}</td>
-              <td>{meals?.chefId}</td>
+                  </td>
 
-              {role === "chef" && status === "active" && (
-                <td>
-                  <Link
-                    to={`/dashboard/my-meals/${meals._id}`}
-                    className="btn btn-ghost btn-xs"
-                  >
-                    Update Meal
-                  </Link>
-                  <button
-                    onClick={() => handleDelete(meals._id)}
-                    className="btn btn-ghost btn-xs"
-                  >
-                    Delete
-                  </button>
-                </td>
-              )}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                  <td className="font-semibold">{meals.foodName}</td>
+                  <td className="font-medium">৳ {meals.price}</td>
+                  <td>{meals.rating}</td>
+                  <td className="text-sm">{meals.ingredients}</td>
+                  <td>{meals.estimatedDeliveryTime}</td>
+                  <td>{meals.chefName}</td>
+                  <td className="text-xs">{meals.chefId}</td>
+
+                  {role === "chef" && status === "active" && (
+                    <td>
+                      <div className="flex gap-2">
+                        <Link
+                          to={`/dashboard/my-meals/${meals._id}`}
+                          className="btn btn-xs btn-outline btn-info"
+                        >
+                          Update
+                        </Link>
+                        <button
+                          onClick={() => handleDelete(meals._id)}
+                          className="btn btn-xs btn-outline btn-error"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {MyMeals.length === 0 && (
+          <div className="text-center py-10 text-gray-500">
+            No meals found 🍽️
+          </div>
+        )}
+      </div>
     </div>
   );
 };

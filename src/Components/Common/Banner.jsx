@@ -29,7 +29,7 @@ const slides = [
 
 const Banner = () => {
   return (
-    <div className="relative w-full h-[260px] sm:h-[340px] md:h-[420px] lg:h-[500px] overflow-hidden rounded-xl">
+    <div className="relative w-full h-[260px] sm:h-[340px] md:h-[500px] lg:h-[700px] overflow-hidden rounded-b-lg">
       <Swiper
         modules={[Pagination, Autoplay]}
         pagination={{ clickable: true }}

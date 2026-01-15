@@ -20,7 +20,7 @@ const ManageRequests = () => {
       const res = await axiosSecure.get(`/chef-requests`);
       return res.data;
     },
-    enabled: !!user?.email, // Only run if user email exists
+    enabled: !!user?.email,
   });
 
   const { data: Adminrequests, refetch: refetchAdmin } = useQuery({
@@ -29,7 +29,7 @@ const ManageRequests = () => {
       const res = await axiosSecure.get(`/admin-requests`);
       return res.data;
     },
-    enabled: !!user?.email, // Only run if user email exists
+    enabled: !!user?.email,
   });
 
   const updateRoleRequest = async (email, role) => {
@@ -72,9 +72,7 @@ const ManageRequests = () => {
     }
   };
 
-  if (isLoading) {
-    return <Loader></Loader>;
-  }
+  if (isLoading) return <Loader />;
 
   if (error) {
     return (
@@ -85,156 +83,150 @@ const ManageRequests = () => {
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="table">
-        {/* head */}
-        <thead>
-          <tr>
-            <th></th>
+    <div className="bg-base-100 rounded-2xl shadow-lg p-6 overflow-x-auto">
+      <h2 className="text-2xl font-bold text-primary mb-6">
+        Manage Role Requests
+      </h2>
+
+      <table className="table table-zebra w-full">
+        {/* Head */}
+        <thead className="bg-base-200 sticky top-0 z-10">
+          <tr className="uppercase text-xs tracking-wide text-gray-600">
             <th>Name</th>
             <th>Email</th>
             <th>Request Type</th>
             <th>Status</th>
-            <th>Action</th>
+            <th className="text-center">Action</th>
           </tr>
         </thead>
+
         <tbody>
-          {/* row 1 */}
+          {/* Chef Requests */}
           {requests && requests.length > 0 ? (
             requests.map((req, i) => (
-              <tr key={i}>
-                <th>{i + 1}</th>
-                <td className="text-primary">{req.userName}</td>
-                <td>{req.userEmail}</td>
+              <tr key={i} className="hover:bg-base-200/50">
+                <td className="font-semibold text-primary">{req.userName}</td>
+                <td className="text-sm text-gray-600">{req.userEmail}</td>
+
                 <td>
-                  {req.requestType === "admin" ? (
-                    <p className="text-green-500">ADMIN</p>
-                  ) : (
-                    <p className="text-red-500">CHEF</p>
-                  )}
+                  <span
+                    className={`badge px-4 py-2 font-bold ${
+                      req.requestType === "admin"
+                        ? "badge-info"
+                        : "badge-warning"
+                    }`}
+                  >
+                    {req.requestType.toUpperCase()}
+                  </span>
                 </td>
+
                 <td>
-                  {" "}
-                  {req.requestStatus === "pending" ? (
-                    <p className="text-green-500">Pending</p>
-                  ) : (
-                    <p className="text-red-500">Rejected</p>
-                  )}
+                  <span
+                    className={`badge badge-outline px-4 py-2 ${
+                      req.requestStatus === "pending"
+                        ? "badge-success"
+                        : "badge-error"
+                    }`}
+                  >
+                    {req.requestStatus}
+                  </span>
                 </td>
-                <td className="flex flex-col gap-1">
-                  {req.requestStatus === "rejected" ? (
-                    <button
-                      disabled="true"
-                      onClick={() =>
-                        updateRoleRequest(req.userEmail, req.requestType)
-                      }
-                      className="btn btn-xs border border-primary"
-                    >
-                      Make Chef
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() =>
-                        updateRoleRequest(req.userEmail, req.requestType)
-                      }
-                      className="btn btn-xs border border-primary"
-                    >
-                      Make Chef
-                    </button>
-                  )}
-                  {req.requestStatus === "rejected" ? (
-                    <button
-                      disabled="true"
-                      className="btn btn-xs border border-primary"
-                    >
-                      Rejected
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() =>
-                        handleChefReject(req.userEmail, req.requestStatus)
-                      }
-                      className="btn btn-xs border border-primary"
-                    >
-                      Reject
-                    </button>
-                  )}
+
+                <td className="flex flex-col gap-2 items-center">
+                  <button
+                    disabled={req.requestStatus === "rejected"}
+                    onClick={() =>
+                      updateRoleRequest(req.userEmail, req.requestType)
+                    }
+                    className={`btn btn-xs w-28 ${
+                      req.requestStatus === "rejected"
+                        ? "btn-disabled"
+                        : "btn-outline btn-primary"
+                    }`}
+                  >
+                    Make Chef
+                  </button>
+
+                  <button
+                    disabled={req.requestStatus === "rejected"}
+                    onClick={() => handleChefReject(req.userEmail)}
+                    className={`btn btn-xs w-28 ${
+                      req.requestStatus === "rejected"
+                        ? "btn-disabled"
+                        : "btn-outline btn-error"
+                    }`}
+                  >
+                    Reject
+                  </button>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="4" className="text-center py-4">
+              <td colSpan="6" className="text-center py-6 text-gray-500">
                 No chef requests found
               </td>
             </tr>
           )}
 
-          {/* row 2 */}
+          {/* Admin Requests */}
           {Adminrequests && Adminrequests.length > 0 ? (
             Adminrequests.map((req, i) => (
-              <tr key={i}>
-                <th>{i + 1}</th>
-                <td className="text-primary">{req.userName}</td>
-                <td>{req.userEmail}</td>
+              <tr key={i} className="hover:bg-base-200/50">
+                <td className="font-semibold text-primary">{req.userName}</td>
+                <td className="text-sm text-gray-600">{req.userEmail}</td>
+
                 <td>
-                  {req.requestType === "admin" ? (
-                    <p className="text-green-500">ADMIN</p>
-                  ) : (
-                    <p className="text-red-500">CHEF</p>
-                  )}
+                  <span className="badge badge-info px-4 py-2 font-bold">
+                    ADMIN
+                  </span>
                 </td>
+
                 <td>
-                  {req.requestStatus === "pending" ? (
-                    <p className="text-green-500">Pending</p>
-                  ) : (
-                    <p className="text-red-500">Rejected</p>
-                  )}
+                  <span
+                    className={`badge badge-outline px-4 py-2 ${
+                      req.requestStatus === "pending"
+                        ? "badge-success"
+                        : "badge-error"
+                    }`}
+                  >
+                    {req.requestStatus}
+                  </span>
                 </td>
-                <td className="flex flex-col gap-1">
-                  {req.requestStatus === "rejected" ? (
-                    <button
-                      disabled="true"
-                      onClick={() =>
-                        updateAdminRoleRequest(req.userEmail, req.requestStatus)
-                      }
-                      className="btn btn-xs border border-primary "
-                    >
-                      Make Admin
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() =>
-                        updateAdminRoleRequest(req.userEmail, req.requestStatus)
-                      }
-                      className="btn btn-xs border border-primary text-white bg-green-500"
-                    >
-                      Make Admin
-                    </button>
-                  )}
-                  {req.requestStatus === "rejected" ? (
-                    <button
-                      disabled="true"
-                      onClick={() => handleAdminReject(req.userEmail)}
-                      className="btn btn-xs border border-primary"
-                    >
-                      Reject
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => handleAdminReject(req.userEmail)}
-                      className="btn btn-xs border border-primary text-white bg-red-500"
-                    >
-                      Reject
-                    </button>
-                  )}
+
+                <td className="flex flex-col gap-2 items-center">
+                  <button
+                    disabled={req.requestStatus === "rejected"}
+                    onClick={() =>
+                      updateAdminRoleRequest(req.userEmail, req.requestStatus)
+                    }
+                    className={`btn btn-xs w-28 ${
+                      req.requestStatus === "rejected"
+                        ? "btn-disabled"
+                        : "btn-success text-white"
+                    }`}
+                  >
+                    Make Admin
+                  </button>
+
+                  <button
+                    disabled={req.requestStatus === "rejected"}
+                    onClick={() => handleAdminReject(req.userEmail)}
+                    className={`btn btn-xs w-28 ${
+                      req.requestStatus === "rejected"
+                        ? "btn-disabled"
+                        : "btn-error text-white"
+                    }`}
+                  >
+                    Reject
+                  </button>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="4" className="text-center py-4">
-                No chef requests found
+              <td colSpan="6" className="text-center py-6 text-gray-500">
+                No admin requests found
               </td>
             </tr>
           )}
